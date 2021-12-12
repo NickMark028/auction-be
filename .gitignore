@@ -4,4 +4,6 @@
 /bin
 package-lock.json
 
+# Yarn
+yarn-error.log
 

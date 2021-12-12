@@ -1,5 +1,7 @@
-var express = require('express');
-var router = express.Router();
+import { Request, Response } from "express";
+
+const express = require('express');
+const router = express.Router();
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const jwt  = require('jsonwebtoken')
@@ -9,7 +11,7 @@ const userModel = require("../models/user")
 const login = JSON.parse(fs.readFileSync('./schema/login.json'));
 const refresh = JSON.parse(fs.readFileSync('./schema/rf.json'));
 
-router.post('/', validate(login), async function (req, res) {
+router.post('/', validate(login), async function (req: Request, res: Response) {
   const user = await userModel.findByUserName(req.body.username);
   if (user === null) {
     return res.status(401).json({
@@ -43,7 +45,7 @@ router.post('/', validate(login), async function (req, res) {
   });
 });
 
-router.post('/refresh', validate(refresh), async function (req, res) {
+router.post('/refresh', validate(refresh), async function (req: Request, res: Response) {
   const { accessToken, refreshToken } = req.body;
   try {
     const opts = {

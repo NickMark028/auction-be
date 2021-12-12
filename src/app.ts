@@ -4,12 +4,12 @@ import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import cors from 'cors'
 
-var authRouter = require('./routes/auth');
-var userRouter = require('./routes/user');
+const authRouter = require('./routes/auth');
+const userRouter = require('./routes/user');
 
-var auth = require('./middleware/auth.mdw.js');
+// var auth = require('./middleware/auth.mdw.js');
 
-var app = express();
+const app = express();
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
