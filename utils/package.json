@@ -1,11 +1,9 @@
 {
-  "name": "auction-be",
+  "name": "sakila-1",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon app.js",
-    "dev": "nodemon ./src/index.ts",
-    "formatter": "yarn prettier --write ./src"
+    "start": "nodemon app.js"
   },
   "dependencies": {
     "ajv": "^8.6.3",
@@ -25,13 +23,5 @@
     "nodemon": "^2.0.13",
     "randomstring": "^1.2.1",
     "readjson": "^2.2.2"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.13",
-    "@types/node": "^16.11.10",
-    "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.3.0",
-    "nodemon": "^2.0.15",
-    "prettier": "2.5.1"
   }
 }
