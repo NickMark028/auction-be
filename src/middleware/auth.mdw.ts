@@ -1,4 +1,5 @@
-const jwt =require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+
 function auth(req, res, next) {
   const accessToken = req.headers['x-access-token'];
   if (accessToken) {
@@ -10,13 +11,13 @@ function auth(req, res, next) {
     } catch (err) {
       console.log(err);
       return res.status(401).json({
-        message: 'Invalid access token.'
+        message: 'Invalid access token.',
       });
     }
   } else {
     return res.status(401).json({
-      message: 'Access token not found.'
+      message: 'Access token not found.',
     });
   }
 }
-module.exports=auth
+module.exports = auth;

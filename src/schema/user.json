@@ -11,10 +11,6 @@
       "type": "string"
     }
   },
-  "required": [
-    "username",
-    "password",
-    "name"
-  ],
+  "required": ["username", "password", "name"],
   "additionalProperties": false
 }

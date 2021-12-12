@@ -1,4 +1,4 @@
-const db = require("../utils/db")
+const db = require('../utils/db');
 
 const TABLE_NAME = 'users';
 const TABLE_ID = 'id';
@@ -8,8 +8,7 @@ function findAll() {
 }
 async function findById(id) {
   const list = await db(TABLE_NAME).where(TABLE_ID, id);
-  if (list.length === 0)
-    return null;
+  if (list.length === 0) return null;
 
   return list[0];
 }
@@ -19,17 +18,13 @@ function add(film) {
 }
 
 function del(id) {
-  return db(TABLE_NAME)
-    .where(TABLE_ID, id)
-    .del();
+  return db(TABLE_NAME).where(TABLE_ID, id).del();
 }
 
 function patch(id, film) {
-  return db(TABLE_NAME)
-    .where(TABLE_ID, id)
-    .update(film);
+  return db(TABLE_NAME).where(TABLE_ID, id).update(film);
 }
-async function findByUserName  (username) {
+async function findByUserName(username) {
   const rows = await db(TABLE_NAME).where('username', username);
   if (rows.length === 0) {
     return null;
@@ -50,6 +45,12 @@ async function isValidRefreshToken(userId, refreshToken) {
   return true;
 }
 
-
-module.exports={findAll,findById,add,del,patch,findByUserName,isValidRefreshToken }
- 
+module.exports = {
+  findAll,
+  findById,
+  add,
+  del,
+  patch,
+  findByUserName,
+  isValidRefreshToken,
+};

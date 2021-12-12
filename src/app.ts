@@ -1,8 +1,8 @@
-import express, { NextFunction, Response, ErrorRequestHandler } from 'express'
+import express, { NextFunction, Response, ErrorRequestHandler } from 'express';
 // var path = require('path');
-import cookieParser from 'cookie-parser'
-import morgan from 'morgan'
-import cors from 'cors'
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import cors from 'cors';
 
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
@@ -31,15 +31,15 @@ app.get('/err', function (req, res) {
 
 app.use(function (req, res, next) {
   res.status(404).json({
-    error: 'Endpoint not found'
+    error: 'Endpoint not found',
   });
 });
 
 app.use(function (err, req, res, next) {
   console.log(err.stack);
   res.status(500).json({
-    error: 'Something broke!'
-  })
+    error: 'Something broke!',
+  });
 } as ErrorRequestHandler);
 
 const PORT = process.env.PORT || 3000;

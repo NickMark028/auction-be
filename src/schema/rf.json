@@ -8,9 +8,6 @@
       "type": "string"
     }
   },
-  "required": [
-    "accessToken",
-    "refreshToken"
-  ],
+  "required": ["accessToken", "refreshToken"],
   "additionalProperties": false
 }

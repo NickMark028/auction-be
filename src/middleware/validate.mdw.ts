@@ -1,4 +1,4 @@
-const Ajv = require("ajv")
+const Ajv = require('ajv');
 
 function validate(schema) {
   return function (req, res, next) {
@@ -9,9 +9,9 @@ function validate(schema) {
     }
 
     next();
-  }
+  };
 }
-module.exports = validate
+module.exports = validate;
 // export default schema => (req, res, next) => {
 //   const ajv = new Ajv();
 //   const valid = ajv.validate(schema, req.body);

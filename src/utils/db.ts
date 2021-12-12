@@ -5,9 +5,9 @@ const knex = require('knex')({
     port: 3306,
     user: 'root',
     password: '2000anhtu',
-    database: 'sakila'
+    database: 'sakila',
   },
-  pool: { min: 0, max: 10 }
+  pool: { min: 0, max: 10 },
 });
 
-module.exports = knex
+module.exports = knex;
