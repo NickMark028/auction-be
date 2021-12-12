@@ -1,11 +1,7 @@
 const db = require("../utils/db")
 
-
-
-
 const TABLE_NAME = 'users';
 const TABLE_ID = 'id';
-
 
 function findAll() {
   return db(TABLE_NAME);
