@@ -7,10 +7,19 @@
     "password": {
       "type": "string"
     },
-    "name": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "dateOfBirth": {
       "type": "string"
     }
   },
-  "required": ["username", "password", "name"],
+  "required": ["username", "password", "firstName","lastName","email","dateOfBirth"],
   "additionalProperties": false
 }

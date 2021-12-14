@@ -7,18 +7,21 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const randomstring = require('randomstring');
 const validate = require('../middleware/validate.mdw');
-const userModel = require('../models/user');
-const login = JSON.parse(fs.readFileSync('./schema/login.json'));
-const refresh = JSON.parse(fs.readFileSync('./schema/rf.json'));
+//const userModel = require('../models/user');
+import userModel from '../models/user'
+
+const login = JSON.parse(fs.readFileSync('./src/schema/login.json'));
+const refresh = JSON.parse(fs.readFileSync('./src/schema/rf.json'));
 
 router.post('/', validate(login), async function (req: Request, res: Response) {
   const user = await userModel.findByUserName(req.body.username);
+  
   if (user === null) {
     return res.status(401).json({
       authenticated: false,
     });
   }
-
+  
   if (bcrypt.compareSync(req.body.password, user.password) === false) {
     return res.status(401).json({
       authenticated: false,
@@ -34,7 +37,7 @@ router.post('/', validate(login), async function (req: Request, res: Response) {
   const accessToken = jwt.sign(payload, 'SECRET_KEY', opts);
 
   const refreshToken = randomstring.generate(80);
-  await userModel.patch(user.id, {
+  await userModel.userModel.patch(user.id, {
     rfToken: refreshToken,
   });
 

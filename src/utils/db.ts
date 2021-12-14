@@ -1,13 +1,13 @@
-const knex = require('knex')({
+import knex from 'knex';
+
+export default knex({
   client: 'mysql2',
-  connection: {
+    connection: {
     host: '127.0.0.1',
     port: 3306,
     user: 'root',
     password: '2000anhtu',
-    database: 'sakila',
+    database: 'auction'
   },
-  pool: { min: 0, max: 10 },
+  pool: { min: 0, max: 10 }
 });
-
-module.exports = knex;

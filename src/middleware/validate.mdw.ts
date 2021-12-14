@@ -1,7 +1,7 @@
 const Ajv = require('ajv');
 
-function validate(schema) {
-  return function (req, res, next) {
+function validate(schema: any) {
+  return function (req: { body: any; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: any): any; new(): any; }; }; }, next: () => void) {
     const ajv = new Ajv();
     const valid = ajv.validate(schema, req.body);
     if (!valid) {

@@ -1,56 +1,25 @@
-const db = require('../utils/db');
 
-const TABLE_NAME = 'users';
-const TABLE_ID = 'id';
+import db from '../utils/db';
+import generate from '../models/generic.model';
 
-function findAll() {
-  return db(TABLE_NAME);
-}
-async function findById(id) {
-  const list = await db(TABLE_NAME).where(TABLE_ID, id);
-  if (list.length === 0) return null;
 
-  return list[0];
-}
+let userModel = generate('User','id')
 
-function add(film) {
-  return db(TABLE_NAME).insert(film);
-}
-
-function del(id) {
-  return db(TABLE_NAME).where(TABLE_ID, id).del();
-}
-
-function patch(id, film) {
-  return db(TABLE_NAME).where(TABLE_ID, id).update(film);
-}
-async function findByUserName(username) {
-  const rows = await db(TABLE_NAME).where('username', username);
+ async function findByUserName (username: string) {
+  const rows = await db('users').where('username', username);
   if (rows.length === 0) {
-    return null;
+    return rows.toString();
   }
 
   return rows[0];
 }
 
-async function isValidRefreshToken(userId, refreshToken) {
-  const rows = await db(TABLE_NAME)
-    .where(TABLE_ID, userId)
-    .andWhere('rfToken', refreshToken);
+async function isValidRefreshToken(userId: any, refreshToken: any) {
+  const rows = await db('users')
+  .where('id', userId)
+  .andWhere('rfToken', refreshToken);
 
-  if (rows.length === 0) {
-    return false;
-  }
-
-  return true;
+  return rows.length !== 0;
 }
 
-module.exports = {
-  findAll,
-  findById,
-  add,
-  del,
-  patch,
-  findByUserName,
-  isValidRefreshToken,
-};
+export default {userModel, findByUserName, isValidRefreshToken}

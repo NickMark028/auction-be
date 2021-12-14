@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-function auth(req, res, next) {
+function auth(req: { headers: { [x: string]: any; }; accessTokenPayload: any; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): any; new(): any; }; }; }, next: () => void) {
   const accessToken = req.headers['x-access-token'];
   if (accessToken) {
     try {

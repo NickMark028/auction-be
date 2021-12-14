@@ -1,0 +1,40 @@
+{
+    "type": "object",
+    "properties": {
+      "sellerId": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "reservedPrice": {
+        "type": "string"
+      },
+      "priceStep": {
+        "type": "string"
+      },
+      "instantPrice": {
+        "type": "string"
+      },
+      "isRenewal": {
+        "type": "string"
+      },
+      "coverImageURL": {
+        "type": "string"
+      },
+      "timeExpired": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "isDeleted": {
+        "type": "string"
+      }
+    },
+    
+    "additionalProperties": false
+  }
