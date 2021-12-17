@@ -2,12 +2,12 @@ import knex from 'knex';
 
 export default knex({
   client: 'mysql2',
-    connection: {
-    host: '127.0.0.1',
+  connection: {
+    host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '2000anhtu',
-    database: 'auction'
+    password: 'admin123',
+    database: 'auction',
   },
-  pool: { min: 0, max: 10 }
+  pool: { min: 0, max: 10 },
 });
