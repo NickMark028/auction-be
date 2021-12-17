@@ -18,13 +18,15 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-async-errors": "^3.1.1",
+    "global": "^4.4.0",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.11",
     "morgan": "~1.9.1",
     "mysql2": "^2.3.2",
     "nodemon": "^2.0.13",
-    "randomstring": "^1.2.1"
+    "randomstring": "^1.2.1",
+    "ts-node": "^10.4.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",

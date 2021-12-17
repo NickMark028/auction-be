@@ -9,5 +9,5 @@ export default knex({
     password: '2000anhtu',
     database: 'auction'
   },
-  pool: { min: 0, max: 10 }
+  pool: { min: 0, max: 100 }
 });
