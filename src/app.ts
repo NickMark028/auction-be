@@ -6,7 +6,7 @@ import cors from 'cors';
 
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
-const productRouter = require('./routes/product')
+const productRouter = require('./routes/product');
 
 // var auth = require('./middleware/auth.mdw.js');
 
@@ -20,11 +20,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+app.use(cors);
 
 app.use('/api/auth/', authRouter);
 app.use('/api/user/', userRouter);
-app.use('/api/product/',productRouter)
+app.use('/api/product/', productRouter);
 
 // error handler
 app.get('/err', function (req, res) {

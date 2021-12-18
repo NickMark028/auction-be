@@ -1,27 +1,27 @@
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
-const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const randomstring = require('randomstring');
 const validate = require('../middleware/validate.mdw');
 //const userModel = require('../models/user');
-import userModel from '../models/user'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+
+import userModel from '../models/user';
 
 const login = JSON.parse(fs.readFileSync('./src/schema/login.json'));
 const refresh = JSON.parse(fs.readFileSync('./src/schema/rf.json'));
 
 router.post('/', validate(login), async function (req: Request, res: Response) {
   const user = await userModel.findByUserName(req.body.username);
-  
+
   if (user === null) {
     return res.status(401).json({
       authenticated: false,
     });
   }
-  
+
   if (bcrypt.compareSync(req.body.password, user.password) === false) {
     return res.status(401).json({
       authenticated: false,
@@ -57,7 +57,7 @@ router.post(
       const opts = {
         ignoreExpiration: true,
       };
-      const { userId } = jwt.verify(accessToken, 'SECRET_KEY', opts);
+      const { userId } = jwt.verify(accessToken, 'SECRET_KEY', opts) as { userId: string };
       const ret = await userModel.isValidRefreshToken(userId, refreshToken);
       if (ret === true) {
         const opts = {
