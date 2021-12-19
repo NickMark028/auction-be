@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "productName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "page": {
+      "type": "integer"
+    },
+    "category": {
+      "type": "string"
+    },
+    "time": {
+      "type": "string",
+      "pattern": "(asc)|(desc)"
+    },
+    "pricing": {
+      "type": "string",
+      "pattern": "(asc)|(desc)"
+    }
+  },
+  "additionalProperties": false
+}

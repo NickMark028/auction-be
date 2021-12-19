@@ -1,8 +1,11 @@
 import { Request, Response, Router } from "express";
+import validateQuery from "../middleware/validateQuery.mdw";
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
+import searchSchema from '../schema/search.json';
+
+router.get('/', validateQuery(searchSchema), (req: Request, res: Response) => {
     res.json(req.query);
 });
 
