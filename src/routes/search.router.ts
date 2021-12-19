@@ -2,16 +2,28 @@ import { Request, Response, Router } from "express";
 import { ProductQuery } from "../types";
 import validateQuery from "../middleware/validateQuery.mdw";
 import searchSchema from '../schema/search.json';
-import knex from "knex";
+import db from "../utils/db";
+import { convertProcedureRowSetToList } from "../utils/convert";
+import { PageSize } from "../enum";
 
 const router = Router();
 
-router.get('/', validateQuery(searchSchema), (req: Request, res: Response) => {
+router.get('/', validateQuery(searchSchema), async (req: Request, res: Response) => {
     try {
-        const query = (req.query as unknown) as ProductQuery;
-        
-    } 
+        const {
+            keyword,
+            category,
+            page = 1,
+            pricing,
+            time
+        } = (req.query as unknown) as ProductQuery;
+
+        const [rows, fields] = await db.raw('CALL SearchProduct(?, ?, ?)', [keyword, page, PageSize.SEARCH_PRODUCT]);
+
+        res.status(200).json(convertProcedureRowSetToList(rows));
+    }
     catch (error) {
+        console.error(error);
         res.status(500).json({
             message: 'Server error'
         });
