@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { searchRouter } from './routes/search.router';
+import { categoryRouter } from './routes/category';
 // var path = require('path');
 // const authRouter = require('./routes/auth');
 // const userRouter = require('./routes/user');
@@ -29,6 +30,7 @@ app.use(cors());
 // app.use('/api/product/', productRouter);
 
 app.use('/api/search', searchRouter);
+app.use('/api/category', categoryRouter);
 
 // error handler
 app.get('/err', function (req, res) {

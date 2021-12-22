@@ -1,14 +1,24 @@
 import { Request, Response, Router } from "express";
-import { ProductQuery } from "../types";
 import validateQuery from "../middleware/validateQuery.mdw";
 import searchSchema from '../schema/search.json';
 import db from "../utils/db";
 import { convertProcedureRowSetToList } from "../utils/convert";
 import { PageSize } from "../enum";
 
-const router = Router();
+const searchRouter = Router();
 
-router.get('/', validateQuery(searchSchema), async (req: Request, res: Response) => {
+export type ProductQuery = {
+    // Filter
+    keyword: string;
+    page?: number;
+    category?: string;
+
+    // Sorting
+    time?: "asc | desc";
+    pricing?: "asc | desc";
+}
+
+searchRouter.get('/', validateQuery(searchSchema), async (req: Request, res: Response) => {
     try {
         const {
             keyword,
@@ -30,4 +40,6 @@ router.get('/', validateQuery(searchSchema), async (req: Request, res: Response)
     }
 });
 
-export { router as searchRouter }
+// ---------------------------------------------------------- //
+
+export { searchRouter }
