@@ -8,6 +8,7 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const productRouter = require('./routes/product');
 const sellerRouter = require('./routes/seller');
+const bidderRouter = require('./routes/bidder');
 // var auth = require('./middleware/auth.mdw.js');
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/api/auth/', authRouter);
 app.use('/api/user/', userRouter);
 app.use('/api/product/', productRouter);
 app.use('/api/seller/', sellerRouter);
+app.use('/api/bidder/', bidderRouter);
 // error handler
 app.get('/err', function (req, res) {
   throw new Error('Error!');

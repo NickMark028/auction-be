@@ -35,4 +35,18 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/detailproduct/:id', async (req, res) => {
+  try {
+    const product_img = await productModel.detailProduct_img(req.params.id);
+    let product = await productModel.detailProduct(req.params.id);
+    product = { ...product, productimg0: product_img[0].url };
+    product = { ...product, productimg1: product_img[1].url };
+    product = { ...product, productimg2: product_img[2].url };
+    res.send(product).status(201);
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+});
+//5sp cùng cate
+
 module.exports = router;
