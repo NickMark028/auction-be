@@ -26,6 +26,7 @@
     "mysql2": "^2.3.2",
     "nodemon": "^2.0.13",
     "randomstring": "^1.2.1",
+    "socket.io": "^4.4.0",
     "ts-node": "^10.4.0"
   },
   "devDependencies": {
