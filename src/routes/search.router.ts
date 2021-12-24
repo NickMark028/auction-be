@@ -10,25 +10,26 @@ const searchRouter = Router();
 export type ProductQuery = {
     // Filter
     keyword: string;
-    page?: number;
+    page?: string;
     category?: string;
 
     // Sorting
-    time?: "asc | desc";
-    pricing?: "asc | desc";
+    time?: 'asc' | 'desc';
+    pricing?: 'asc' | 'desc';
 }
 
-searchRouter.get('/', validateQuery(searchSchema), async (req: Request, res: Response) => {
+searchRouter.get('', validateQuery(searchSchema), async (req: Request, res: Response) => {
     try {
         const {
             keyword,
             category,
-            page = 1,
+            page = '1',
             pricing,
             time
         } = (req.query as unknown) as ProductQuery;
+        const pageNumber = parseInt(page);
 
-        const [rows, fields] = await db.raw('CALL SearchProduct(?, ?, ?)', [keyword, page, PageSize.SEARCH_PRODUCT]);
+        const [rows, fields] = await db.raw('CALL SearchProduct(?, ?, ?)', [keyword, pageNumber, PageSize.SEARCH_PRODUCT]);
 
         res.status(200).json(convertProcedureRowSetToList(rows));
     }

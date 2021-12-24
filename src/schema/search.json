@@ -6,7 +6,7 @@
       "minLength": 1
     },
     "page": {
-      "type": "integer"
+      "type": "string"
     },
     "category": {
       "type": "string"
