@@ -3,6 +3,7 @@ import express, { NextFunction, Response, ErrorRequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
+//import io from './socket';
 
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
@@ -10,6 +11,29 @@ const productRouter = require('./routes/product');
 const sellerRouter = require('./routes/seller');
 const bidderRouter = require('./routes/bidder');
 // var auth = require('./middleware/auth.mdw.js');
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { clearScreenDown } from 'readline';
+
+const httpServer = createServer();
+const io = new Server(httpServer, {
+  // options
+});
+
+io.on('connection', (socket) => {
+  console.log('conection' + socket.id);
+
+  socket.on('disconnect', () => {
+    console.log(socket.id + ' disconnect');
+  });
+  //socket.emit('test', 'hello');
+  socket.on('test', (data) => {
+    console.log(data);
+    io.sockets.emit('test', data);
+  });
+});
+
+httpServer.listen(40567);
 
 const app = express();
 
@@ -38,7 +62,6 @@ app.use(function (req, res, next) {
     error: 'Endpoint not found',
   });
 });
-
 app.use(function (err, req, res, next) {
   console.log(err.stack);
   res.status(500).json({
