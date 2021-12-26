@@ -11,4 +11,7 @@ async function detailBidder(id: any) {
 
   return rows[0];
 }
+
+
+
 export default { bidderModel, detailBidder };
