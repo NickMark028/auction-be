@@ -9,8 +9,4 @@ rootRouter.get('/', function (req: Request, res: Response, next: NextFunction) {
   res.send('<h1>Hi<h1>');
 });
 
-export {
-  rootRouter,
-  categoryRouter,
-  searchRouter
-}
+export { rootRouter, categoryRouter, searchRouter };

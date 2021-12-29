@@ -20,6 +20,6 @@
       "pattern": "(asc)|(desc)"
     }
   },
-    "required": [ "keyword" ],
+  "required": ["keyword"],
   "additionalProperties": false
 }

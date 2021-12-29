@@ -45,13 +45,18 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
-  console.log(err.stack);
+  if (NODE_ENV === 'develop')
+    console.log(err.stack);
+    
   res.status(500).json({
     error: 'Something broke!',
   });
 } as ErrorRequestHandler);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || '4000';
+const NODE_ENV = process.env.NODE_ENV;
+
 app.listen(PORT, function () {
-  console.log(`Server is listening at http://localhost:${PORT}`);
+  if (NODE_ENV === 'develop')
+    console.log(`Server is listening at http://localhost:${PORT}`);
 });
