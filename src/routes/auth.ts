@@ -5,8 +5,8 @@ const fs = require('fs');
 const randomstring = require('randomstring');
 const validate = require('../middleware/validate.mdw');
 //const userModel = require('../models/user');
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 import userModel from '../models/user';
 
@@ -57,7 +57,9 @@ router.post(
       const opts = {
         ignoreExpiration: true,
       };
-      const { userId } = jwt.verify(accessToken, 'SECRET_KEY', opts) as { userId: string };
+      const { userId } = jwt.verify(accessToken, 'SECRET_KEY', opts) as {
+        userId: string;
+      };
       const ret = await userModel.isValidRefreshToken(userId, refreshToken);
       if (ret === true) {
         const opts = {

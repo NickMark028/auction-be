@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express, { NextFunction, Response, ErrorRequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { searchRouter } from './routes/search.router';
 import { categoryRouter } from './routes/category';
 // var path = require('path');
@@ -12,7 +14,6 @@ import { categoryRouter } from './routes/category';
 
 // var auth = require('./middleware/auth.mdw.js');
 
-dotenv.config();
 const app = express();
 
 // view engine setup
@@ -33,9 +34,9 @@ app.use('/api/search', searchRouter);
 app.use('/api/category', categoryRouter);
 
 // error handler
-app.get('/err', function (req, res) {
-  throw new Error('Error!');
-});
+// app.get('/err', function (req, res) {
+//   throw new Error('Error!');
+// });
 
 app.use(function (req, res, next) {
   res.status(404).json({
@@ -50,7 +51,7 @@ app.use(function (err, req, res, next) {
   });
 } as ErrorRequestHandler);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 app.listen(PORT, function () {
   console.log(`Server is listening at http://localhost:${PORT}`);
 });

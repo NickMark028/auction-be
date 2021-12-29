@@ -3,11 +3,11 @@ import knex from 'knex';
 export default knex({
   client: 'mysql2',
   connection: {
-    host: '127.0.0.1',
-    port: 3306,
-    user: 'root',
-    password: '2000anhtu',
-    database: 'auction',
+    host: process.env.DATABASE_HOST,
+    port: parseInt(process.env.PORT!),
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASS,
+    database: process.env.DATABASE_NAME,
   },
   pool: { min: 0, max: 10 },
 });

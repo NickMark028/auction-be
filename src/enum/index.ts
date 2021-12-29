@@ -1,3 +1,3 @@
 export enum PageSize {
-    SEARCH_PRODUCT = 10,
+  SEARCH_PRODUCT = 10,
 }
