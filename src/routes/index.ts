@@ -1,11 +1,16 @@
-import { NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import { categoryRouter } from './category';
+import { searchRouter } from './search.router';
 
-const express = require('express');
-const router = express.Router();
+const rootRouter = express.Router();
 
 /* GET home page. */
-router.get('/', function (req: Request, res: Response, next: NextFunction) {
+rootRouter.get('/', function (req: Request, res: Response, next: NextFunction) {
   res.send('<h1>Hi<h1>');
 });
 
-export default router;
+export {
+  rootRouter,
+  categoryRouter,
+  searchRouter
+}

@@ -7,7 +7,8 @@ categoryRouter.get('/', async (req: Request, res: Response) => {
   try {
     const result = await db('QueryCategoryView').select();
     res.status(200).json(result);
-  } catch (error) {
+  } 
+  catch (error) {
     res.status(500).json({
       error: 'Server error',
     });
@@ -23,7 +24,8 @@ categoryRouter.get('/:path', async (req: Request, res: Response) => {
       .where({ categoryPath: path })
       .select();
     res.status(200).json(result);
-  } catch (error) {
+  } 
+  catch (error) {
     res.status(500).json({
       error: 'Server error',
     });
