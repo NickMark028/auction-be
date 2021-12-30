@@ -45,9 +45,8 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
-  if (NODE_ENV === 'develop')
-    console.log(err.stack);
-    
+  if (NODE_ENV === 'develop') console.log(err.stack);
+
   res.status(500).json({
     error: 'Something broke!',
   });

@@ -76,8 +76,7 @@ router.post(
         message: 'Refresh token is revoked.',
       });
     } catch (err) {
-      if (process.env.NODE_ENV === 'develop')
-        console.log(err);
+      if (process.env.NODE_ENV === 'develop') console.log(err);
 
       return res.status(401).json({
         message: 'Invalid access token.',

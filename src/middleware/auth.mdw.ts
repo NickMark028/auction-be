@@ -5,8 +5,8 @@ function auth(
   res: {
     status: (arg0: number) => {
       (): any;
-      new(): any;
-      json: { (arg0: { message: string }): any; new(): any };
+      new (): any;
+      json: { (arg0: { message: string }): any; new (): any };
     };
   },
   next: () => void
@@ -19,9 +19,8 @@ function auth(
       req.accessTokenPayload = decoded;
       next();
     } catch (err) {
-      if (process.env.NODE_ENV === 'develop')
-        console.log(err);
-        
+      if (process.env.NODE_ENV === 'develop') console.log(err);
+
       return res.status(401).json({
         message: 'Invalid access token.',
       });
