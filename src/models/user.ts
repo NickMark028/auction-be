@@ -1,10 +1,10 @@
 import db from '../utils/db';
 import generate from '../models/generic.model';
 
-let userModel = generate('User', 'id');
+let userModel = generate('user','id')
 
-async function findByUserName(username: string) {
-  const rows = await db('users').where('username', username);
+ async function findByUserName (username: string) {
+  const rows = await db('user').where('username', username);
   if (rows.length === 0) {
     return rows.toString();
   }
@@ -13,9 +13,9 @@ async function findByUserName(username: string) {
 }
 
 async function isValidRefreshToken(userId: any, refreshToken: any) {
-  const rows = await db('users')
-    .where('id', userId)
-    .andWhere('rfToken', refreshToken);
+  const rows = await db('user')
+  .where('id', userId)
+  .andWhere('rfToken', refreshToken);
 
   return rows.length !== 0;
 }
