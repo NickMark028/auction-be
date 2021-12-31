@@ -1,14 +1,14 @@
 import express, { Request, Response } from 'express';
 
 
-const router = express.Router();
+const userrouter = express.Router();
 const bcrypt = require('bcryptjs');
-const validate = require('../middleware/validate.mdw');
+import validate from '../middleware/validateBody.mdw'
 import userModel from '../models/user';
 const fs = require('fs');
 const schema = JSON.parse(fs.readFileSync('./src/schema/user.json'));
 
-router.post(
+userrouter.post(
   '/',
   validate(schema),
   async function (req: Request, res: Response) {
@@ -27,7 +27,7 @@ router.post(
     res.status(201).json(user);
   }
 );
-router.get('/',async function (req: Request, res: Response) {
+userrouter.get('/',async function (req: Request, res: Response) {
   try {
     const ret = await userModel.userModel.findAll()
     res.status(201).json(ret)
@@ -40,16 +40,16 @@ router.get('/',async function (req: Request, res: Response) {
 
 
 });
-router.delete('/',async function (req: Request, res: Response) {
+userrouter.delete('/',async function (req: Request, res: Response) {
   console.log(req.body.id)
 
 res.status(201).json({
   status:"success"
 })
 })
-router.get('detail',async function name(req: Request, res: Response) {
+userrouter.get('detail',async function name(req: Request, res: Response) {
   console.log(req.body.id)
   const ret = await userModel.userModel.findById("")
   
 })
-module.exports = router;
+export default userrouter

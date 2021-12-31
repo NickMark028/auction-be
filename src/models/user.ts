@@ -6,7 +6,7 @@ let userModel = generate('user','id')
  async function findByUserName (username: string) {
   const rows = await db('user').where('username', username);
   if (rows.length === 0) {
-    return rows.toString();
+    return null;
   }
 
   return rows[0];
