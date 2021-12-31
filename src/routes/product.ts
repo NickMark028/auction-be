@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 
-const validate = require('../middleware/validate.mdw');
+import validate from '../middleware/validateBody.mdw'
 import productodel from '../models/product';
 const fs = require('fs');
 const schema = JSON.parse(fs.readFileSync('./src/schema/product.json'));
