@@ -7,7 +7,7 @@ import { PageSize } from '../enum';
 
 const searchRouter = Router();
 
-export type ProductQuery = {
+type ProductQuery = {
   // Filter
   keyword: string;
   page?: string;
@@ -18,36 +18,34 @@ export type ProductQuery = {
   pricing?: 'asc' | 'desc';
 };
 
-searchRouter.get(
-  '',
-  validateQuery(searchSchema),
-  async (req: Request, res: Response) => {
-    try {
-      const {
-        keyword,
-        category,
-        page = '1',
-        pricing,
-        time,
-      } = req.query as unknown as ProductQuery;
-      const pageNumber = parseInt(page);
+searchRouter.get('/', validateQuery(searchSchema), async (req: Request, res: Response) => {
+  try {
+    const {
+      keyword,
+      category,
+      page = '1',
+      pricing,
+      time,
+    } = req.query as ProductQuery;
+    const pageNumber = parseInt(page);
 
-      const [rows, fields] = await db.raw('CALL SearchProduct(?, ?, ?)', [
-        keyword,
-        pageNumber,
-        PageSize.SEARCH_PRODUCT,
-      ]);
+    const [rows, fields] = await db.raw('CALL SearchProduct(?, ?, ?)', [
+      keyword,
+      pageNumber,
+      PageSize.SEARCH_PRODUCT,
+    ]);
 
-      res.status(200).json(convertProcedureRowSetToList(rows));
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
-        message: 'Server error',
-      });
-    }
+    res.status(200).json(convertProcedureRowSetToList(rows));
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: 'Server error',
+    });
   }
+}
 );
 
 // ---------------------------------------------------------- //
 
-export { searchRouter };
+export default searchRouter;

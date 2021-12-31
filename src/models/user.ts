@@ -1,7 +1,7 @@
 import db from '../utils/db';
 import generate from '../models/generic.model';
 
-let userModel = generate('user','id')
+const userModel = generate('User', 'id');
 
  async function findByUserName (username: string) {
   const rows = await db('user').where('username', username);

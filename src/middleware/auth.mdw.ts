@@ -1,35 +1,27 @@
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { TRequest } from '../types';
 
-function auth(
-  req: { headers: { [x: string]: any }; accessTokenPayload: any },
-  res: {
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      json: { (arg0: { message: string }): any; new (): any };
-    };
-  },
-  next: () => void
-) {
-  const accessToken = req.headers['x-access-token'];
+export default function auth(req: TRequest, res: Response, next: NextFunction) {
+  const accessToken = req.headers['x-access-token'] as string | undefined;
   if (accessToken) {
     try {
       const decoded = jwt.verify(accessToken, 'SECRET_KEY');
       // console.log(decoded);
       req.accessTokenPayload = decoded;
       next();
-    } catch (err) {
+    }
+    catch (err) {
       if (process.env.NODE_ENV === 'develop') console.log(err);
 
       return res.status(401).json({
         message: 'Invalid access token.',
       });
     }
-  } else {
+  }
+  else {
     return res.status(401).json({
       message: 'Access token not found.',
     });
   }
 }
-
-export default auth;
