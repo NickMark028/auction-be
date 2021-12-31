@@ -5,7 +5,7 @@ import express, { NextFunction, Response, ErrorRequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
-import { categoryRouter, rootRouter, searchRouter, userRouter } from './routes';
+import { categoryRouter, rootRouter, searchRouter, userRouter, watchListRouter } from './routes';
 // var path = require('path');
 // const authRouter = require('./routes/auth');
 // const userRouter = require('./routes/user');
@@ -32,6 +32,7 @@ app.use('/', rootRouter);
 app.use('/api/user/', userRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/category', categoryRouter);
+app.use('/api/watch-list', watchListRouter);
 
 // error handler
 // app.get('/err', function (req, res) {
