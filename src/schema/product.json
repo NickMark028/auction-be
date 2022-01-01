@@ -22,7 +22,7 @@
     "isRenewal": {
       "type": "string"
     },
-    "coverImageURL": {
+    "coverImageUrl": {
       "type": "string"
     },
     "timeExpired": {

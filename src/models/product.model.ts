@@ -21,7 +21,7 @@ async function pb_related(Section: any) {
       'createdAt',
       'timeExpired',
       'auctionLogCount',
-      'coverImageURL'
+      'coverImageUrl'
     )
     .where('section', Section)
     .orderByRaw('RAND()')
