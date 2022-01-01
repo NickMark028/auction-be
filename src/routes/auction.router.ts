@@ -2,9 +2,6 @@ import express, { Request, Response } from 'express';
 import auctionModel from '../models/auction.model';
 
 const auctionRouter = express.Router();
-const validate = require('../middleware/validate.mdw');
-const fs = require('fs');
-//const schema = JSON.parse(fs.readFileSync('./src/schema/product.json'));
 
 auctionRouter.post('/', async (req, res) => {
   try {

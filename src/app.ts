@@ -42,7 +42,6 @@ import express, { NextFunction, Response, ErrorRequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
-// var auth = require('./middleware/auth.mdw.js');
 
 import {
   authRouter,
