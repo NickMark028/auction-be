@@ -8,6 +8,7 @@ import cors from 'cors';
 import {categoryRouter, rootRouter, searchRouter } from './routes';
 import authRouter from './routes/auth';
 import userRouter from './routes/user';
+import productRouter from './routes/product';
 // var path = require('path');
 // const authRouter = require('./routes/auth');
 // const userRouter = require('./routes/user');
@@ -29,7 +30,7 @@ app.use(cors());
 
 app.use('/api/auth/', authRouter);
 app.use('/api/user/', userRouter);
-// app.use('/api/product/', productRouter);
+app.use('/api/product/', productRouter);
 
 app.use('/', rootRouter);
 app.use('/api/search', searchRouter);

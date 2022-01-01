@@ -4,9 +4,9 @@ import validate from '../middleware/validateBody.mdw'
 import productodel from '../models/product';
 const fs = require('fs');
 const schema = JSON.parse(fs.readFileSync('./src/schema/product.json'));
-const router = express.Router();
+const producrouter = express.Router();
 
-router.post(
+producrouter.post(
   '/',
   validate(schema),
   async function (req: Request, res: Response) {
@@ -26,5 +26,20 @@ router.post(
     return res.status(200).json(product);
   }
 );
+producrouter.get(
+  '/',
+  validate(schema),
+  async function (req: Request, res: Response) {
+    var ret = null;
+    try {
+      ret = await productodel.findAll();
+    } catch (err) {
+      return res.status(401).json({ error: err });
+    }
 
-module.exports = router;
+   
+
+    return res.status(200).json(ret);
+  }
+);
+export default producrouter;
