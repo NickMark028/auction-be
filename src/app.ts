@@ -10,6 +10,8 @@ const userRouter = require('./routes/user');
 const productRouter = require('./routes/product');
 const sellerRouter = require('./routes/seller');
 const bidderRouter = require('./routes/bidder');
+const auctionRouter = require('./routes/auction');
+
 // var auth = require('./middleware/auth.mdw.js');
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -17,7 +19,9 @@ import { clearScreenDown } from 'readline';
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
-  // options
+  cors: {
+    origin: '*',
+  },
 });
 //dùng chung 1 io =>> nhiều socket cho mỗi kết nối
 
@@ -31,7 +35,8 @@ io.on('connection', (socket) => {
   //socket.emit('test', 'hello');
   socket.on('bid', (data) => {
     console.log(data);
-    io.sockets.emit('test', data); // thông báo lại cho toàn bộ những socket đang theo dõi
+    io.sockets.emit('updatebid', data); // thông báo lại cho toàn bộ những socket đang theo dõi
+    //luu lai auctionlog
   });
 });
 
@@ -48,12 +53,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-
+app.use(
+  cors({
+    origin: 'http://localhost:3001',
+    methods: 'GET,PATCH,POST,DELETE',
+  })
+);
 app.use('/api/auth/', authRouter);
 app.use('/api/user/', userRouter);
 app.use('/api/product/', productRouter);
 app.use('/api/seller/', sellerRouter);
 app.use('/api/bidder/', bidderRouter);
+app.use('/api/auction/', auctionRouter);
 // error handler
 app.get('/err', function (req, res) {
   throw new Error('Error!');
