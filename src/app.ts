@@ -5,14 +5,8 @@ import express, { NextFunction, Response, ErrorRequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
-import { authRouter, categoryRouter, rootRouter, searchRouter, userRouter, watchListRouter } from './routes';
-// var path = require('path');
-// const authRouter = require('./routes/auth');
-// const userRouter = require('./routes/user');
-// const productRouter = require('./routes/product');
-
-// var auth = require('./middleware/auth.mdw.js');
-
+import { authRouter, categoryRouter, productRouter, rootRouter, searchRouter, userRouter, watchListRouter } from './routes';
+import { auth } from './middleware';
 const app = express();
 
 // view engine setup
@@ -25,14 +19,13 @@ app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-// app.use('/api/product/', productRouter);
-
 app.use('/', rootRouter);
 app.use('/api/auth/', authRouter);
 app.use('/api/user/', userRouter);
 app.use('/api/search', searchRouter);
+app.use('/api/product', productRouter);
 app.use('/api/category', categoryRouter);
-app.use('/api/watch-list', watchListRouter);
+app.use('/api/watch-list', /* auth ,*/ watchListRouter);
 
 // error handler
 // app.get('/err', function (req, res) {

@@ -1,6 +1,4 @@
 import { Request, Response, Router } from "express";
-import knex from "knex";
-import auth from "../middleware/auth.mdw";
 import validateBody from "../middleware/validateBody.mdw";
 import { TRequest } from "../types";
 import db from "../utils/db";
@@ -9,9 +7,11 @@ import watchListSchema from '../schema/watchList.json'
 
 const watchListRouter = Router();
 
-watchListRouter.patch('/', /* validateBody(auth), */validateBody(watchListSchema), async (req: TRequest, res: Response) => {
+watchListRouter.patch('/', validateBody(watchListSchema), async (req: TRequest, res: Response) => {
     try {
         // const { id } = req.accessTokenPayload;
+        console.log();
+        
         const bidderId = 1000001;   //! Hard code
         const { productId } = req.body;
         const rawQuery = `CALL ToggleFavoriteProduct(?, ?, @isFavorite)`
@@ -28,7 +28,7 @@ watchListRouter.patch('/', /* validateBody(auth), */validateBody(watchListSchema
     }
 })
 
-watchListRouter.get('/', /* validateBody(auth), */async (req: TRequest, res: Response) => {
+watchListRouter.get('/', async (req: TRequest, res: Response) => {
     try {
         // const { id } = req.accessTokenPayload;
         const bidderId = 1000001; //! Hard code

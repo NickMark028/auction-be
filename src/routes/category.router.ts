@@ -6,10 +6,10 @@ const categoryRouter = Router();
 categoryRouter.get('/', async (req: Request, res: Response) => {
   try {
     const queryString = `
-      SELECT		C.section, JSON_ARRAYAGG(JSON_OBJECT(
-                  'id', C.id,
-                  'name', C.\`name\`,
-                  'path', C.\`path\`)
+      SELECT	C.section, JSON_ARRAYAGG(JSON_OBJECT(
+                'id', C.id,
+                'name', C.\`name\`,
+                'path', C.\`path\`)
               ) AS categories
       FROM		Category C
       GROUP BY	C.section;

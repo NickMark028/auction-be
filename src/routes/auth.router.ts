@@ -1,15 +1,13 @@
 import express, { Request, Response } from 'express';
-
-const authRouter = express.Router();
 import randomstring from 'randomstring';
-//const userModel = require('../models/user');
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
 import userModel from '../models/user';
 import { validateBody } from '../middleware';
 import login from '../schema/login.json';
 import refresh from '../schema/rf.json';
+
+const authRouter = express.Router();
 
 authRouter.post('/', validateBody(login), async function (req: Request, res: Response) {
   const user = await userModel.findByUserName(req.body.username);
@@ -33,9 +31,9 @@ authRouter.post('/', validateBody(login), async function (req: Request, res: Res
     userId: user.id,
   };
   const accessToken = jwt.sign(payload, 'SECRET_KEY', opts);
-
   const refreshToken = randomstring.generate(80);
-  await userModel.userModel.patch(user.id, {
+
+    await userModel.userModel.patch(user.id, {
     rfToken: refreshToken,
   });
 
