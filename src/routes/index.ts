@@ -1,8 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
+import auctionRouter from './auction.router';
 import authRouter from './auth.router';
+import bidderRouter from './bidder.router';
 import categoryRouter from './category.router';
 import productRouter from './product.router';
 import searchRouter from './search.router';
+import sellerRouter from './seller.route';
 import userRouter from './user.router';
 import watchListRouter from './watchList.router';
 
@@ -14,7 +17,14 @@ rootRouter.get('/', function (req: Request, res: Response, next: NextFunction) {
 });
 
 export {
-  rootRouter, authRouter, categoryRouter,
-  searchRouter, productRouter, userRouter,
-  watchListRouter
+  rootRouter,
+  auctionRouter,
+  authRouter,
+  bidderRouter,
+  categoryRouter,
+  productRouter,
+  searchRouter,
+  sellerRouter,
+  userRouter,
+  watchListRouter,
 };

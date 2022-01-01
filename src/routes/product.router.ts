@@ -1,27 +1,30 @@
 import express, { Request, Response } from 'express';
-import productodel from '../models/product';
-import schema from '../schema/product.json'
+import productmodel from '../models/product.model';
+import schema from '../schema/product.json';
 import { validateBody } from '../middleware';
 import db from '../utils/db';
+import productModel from '../models/product.model';
 
 const productRouter = express.Router();
 
-productRouter.post('/', validateBody(schema), async function (req: Request, res: Response) {
-  let product = req.body;
-  let ret = null;
-  try {
-    ret = await productodel.add(product);
-    product = {
-      id: ret[0],
-      ...product,
-    };
+productRouter.post(
+  '/',
+  validateBody(schema),
+  async function (req: Request, res: Response) {
+    let product = req.body;
+    try {
+      const ret = await productmodel.add(product);
+      product = {
+        id: ret[0],
+        ...product,
+      };
 
-    return res.status(200).json(product);
+      return res.status(200).json(product);
+    } catch (err) {
+      return res.status(401).json({ error: err });
+    }
   }
-  catch (err) {
-    return res.status(401).json({ error: err });
-  }
-});
+);
 
 productRouter.get('/top-near-end', async (req: Request, res: Response) => {
   try {
@@ -33,13 +36,12 @@ productRouter.get('/top-near-end', async (req: Request, res: Response) => {
     `;
     const [rows, fields] = await db.raw(rawQuery);
     res.status(200).json(rows);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({
-      error: "Server internal error"
-    })
+      error: 'Server internal error',
+    });
   }
-})
+});
 
 productRouter.get('/top-priciest', async (req: Request, res: Response) => {
   try {
@@ -51,13 +53,12 @@ productRouter.get('/top-priciest', async (req: Request, res: Response) => {
     `;
     const [rows, fields] = await db.raw(rawQuery);
     res.status(200).json(rows);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({
-      error: "Server internal error"
-    })
+      error: 'Server internal error',
+    });
   }
-})
+});
 
 productRouter.get('/top-auction-log', async (req: Request, res: Response) => {
   try {
@@ -69,12 +70,60 @@ productRouter.get('/top-auction-log', async (req: Request, res: Response) => {
     `;
     const [rows, fields] = await db.raw(rawQuery);
     res.status(200).json(rows);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({
-      error: "Server internal error"
-    })
+      error: 'Server internal error',
+    });
   }
-})
+});
+
+productRouter.post(
+  '/',
+  // validate(schema),
+  async function (req: Request, res: Response) {
+    let product = req.body;
+    let ret = null;
+    try {
+      ret = await productModel.add(product);
+    } catch (err) {
+      return res.status(401).json({ error: err });
+    }
+
+    product = {
+      id: ret[0],
+      ...product,
+    };
+
+    return res.status(200).json(product);
+  }
+);
+
+productRouter.get('/:id', async (req, res) => {
+  try {
+    const product = await productModel.detailProduct(req.params.id);
+    res.send(product).status(201);
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+});
+
+productRouter.get('/detailproduct/:id', async (req, res) => {
+  try {
+    const product = await productModel.detailProduct(req.params.id);
+    res.send(product).status(201);
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+});
+
+//5sp cùng cate/ related
+productRouter.get('/related/:section', async (req, res) => {
+  try {
+    const pdrelated = await productModel.pb_related(req.params.section);
+    res.send(pdrelated).status(201);
+  } catch (error) {
+    res.send(error).status(401);
+  }
+});
 
 export default productRouter;

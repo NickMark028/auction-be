@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 export type TRequest = Request & {
-    accessTokenPayload?: string | jwt.JwtPayload;
-}
+  accessTokenPayload?: string | jwt.JwtPayload;
+};
 
 export type TResponse = Response;
 
