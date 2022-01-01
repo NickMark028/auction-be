@@ -8,7 +8,7 @@ const fs = require('fs');
 router.post('/', async (req, res) => {
   try {
     let auction = req.body;
-    const ret = await auctionModel.add(auction);
+    const ret = await auctionModel.auctionModel.add(auction);
     auction = {
       id: ret[0],
       ...auction,
@@ -20,9 +20,9 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get(':id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const auctionLog = await auctionModel.findById(req.params.id);
+    const auctionLog = await auctionModel.bidHistory(req.params.id);
     res.send(auctionLog).status(201);
   } catch (err) {
     return res.status(401).json({ error: err });
