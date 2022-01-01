@@ -13,8 +13,10 @@ const db = knex({
     min: 0,
     max: 10,
     afterCreate: (connection: any, callback: any) => {
-      connection.query(`SET time_zone = '+7:00'`, (err: any) => callback(err, connection))
-    }
+      connection.query(`SET time_zone = '+7:00'`, (err: any) =>
+        callback(err, connection)
+      );
+    },
   },
 });
 
