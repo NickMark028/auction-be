@@ -125,5 +125,18 @@ productRouter.get('/related/:section', async (req, res) => {
     res.send(error).status(401);
   }
 });
+productRouter.get('/topbidder/:id', async (req, res) => {
+  try {
+    const rawQuery = `
+    select * from bidhistoryview where price = (select max(price) from bidhistoryview)
+    `;
+    const [rows, fields] = await db.raw(rawQuery);
+    res.status(200).json(rows[0]);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Server internal error',
+    });
+  }
+});
 
 export default productRouter;
