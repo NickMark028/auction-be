@@ -8,7 +8,8 @@ bidderRouter.get('/:id', async (req, res) => {
   try {
     const bidder = await bidderModel.findById(req.params.id);
     res.send(bidder).status(201);
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(401).json({ error: err });
   }
 });

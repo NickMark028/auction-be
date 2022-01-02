@@ -13,7 +13,8 @@ auctionRouter.post('/', async (req, res) => {
     };
 
     res.status(201).json(auction);
-  } catch (error) {
+  }
+   catch (error) {
     res.send(error).status(401);
   }
 });
@@ -22,7 +23,8 @@ auctionRouter.get('/:id', async (req, res) => {
   try {
     const auctionLog = await auctionModel.bidHistory(req.params.id);
     res.send(auctionLog).status(201);
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(401).json({ error: err });
   }
 });

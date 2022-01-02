@@ -32,7 +32,7 @@ productRouter.get('/top-near-end', async (req: Request, res: Response) => {
       SELECT		*
       FROM		  ProductView PV
       ORDER BY	TIME_TO_SEC(TIMEDIFF(NOW(), NOW() - INTERVAL 1 MONTH)) ASC
-      LIMIT 		6;
+      LIMIT 		8;
     `;
     const [rows, fields] = await db.raw(rawQuery);
     res.status(200).json(rows);
@@ -49,7 +49,7 @@ productRouter.get('/top-priciest', async (req: Request, res: Response) => {
       SELECT		*
       FROM	  	ProductView PV
       ORDER BY	IF(PV.currentPrice IS NULL, PV.reservedPrice, PV.currentPrice) DESC
-      LIMIT 		6;
+      LIMIT 		8;
     `;
     const [rows, fields] = await db.raw(rawQuery);
     res.status(200).json(rows);
@@ -66,7 +66,7 @@ productRouter.get('/top-auction-log', async (req: Request, res: Response) => {
       SELECT		*
       FROM	  	ProductView PV
       ORDER BY	PV.auctionLogCount DESC
-      LIMIT 		6;
+      LIMIT 		8;
     `;
     const [rows, fields] = await db.raw(rawQuery);
     res.status(200).json(rows);

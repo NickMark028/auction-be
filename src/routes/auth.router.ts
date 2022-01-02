@@ -75,7 +75,8 @@ authRouter.post(
       return res.status(401).json({
         message: 'Refresh token is revoked.',
       });
-    } catch (err) {
+    } 
+    catch (err) {
       if (process.env.NODE_ENV === 'develop') console.log(err);
 
       return res.status(401).json({
