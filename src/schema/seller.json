@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "id ": { "type": "bigint " },
+    "username": { "type": "String" },
+    "password": { "type": "String" },
+    "firstName": { "type": "String" },
+    "lastName": { "type": "String" },
+    "email": { "type": "String" },
+    "dateOfBirth": { "type": "date" },
+    "createdAt": { "type": "timestamp" },
+    "updatedAt": { "type": "timestamp" },
+    "address": { "type": "String" },
+    "verifed": { "type": "tinyint(1)" },
+    "score": { "type": "int" },
+    "isDeleted": { "type": "tinyint(1)" },
+    "expiredTime": { "type": "timestamp" },
+    "active": { "type": "tinyint(1)" }
+  },
+  "additionalProperties": false
+}

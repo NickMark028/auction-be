@@ -9,7 +9,15 @@ const db = knex({
     password: process.env.DATABASE_PASS!,
     database: process.env.DATABASE_NAME!,
   },
-  pool: { min: 0, max: 10 },
+  pool: {
+    min: 0,
+    max: 10,
+    afterCreate: (connection: any, callback: any) => {
+      connection.query(`SET time_zone = '+7:00'`, (err: any) =>
+        callback(err, connection)
+      );
+    },
+  },
 });
 
 export default db;

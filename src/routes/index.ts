@@ -1,6 +1,13 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { categoryRouter } from './category';
-import { searchRouter } from './search.router';
+import auctionRouter from './auction.router';
+import authRouter from './auth.router';
+import bidderRouter from './bidder.router';
+import categoryRouter from './category.router';
+import productRouter from './product.router';
+import searchRouter from './search.router';
+import sellerRouter from './seller.route';
+import userRouter from './user.router';
+import watchListRouter from './watchList.router';
 
 const rootRouter = express.Router();
 
@@ -9,4 +16,15 @@ rootRouter.get('/', function (req: Request, res: Response, next: NextFunction) {
   res.send('<h1>Hi<h1>');
 });
 
-export { rootRouter, categoryRouter, searchRouter };
+export {
+  rootRouter,
+  auctionRouter,
+  authRouter,
+  bidderRouter,
+  categoryRouter,
+  productRouter,
+  searchRouter,
+  sellerRouter,
+  userRouter,
+  watchListRouter,
+};

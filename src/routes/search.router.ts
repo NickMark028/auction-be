@@ -7,7 +7,7 @@ import { PageSize } from '../enum';
 
 const searchRouter = Router();
 
-export type ProductQuery = {
+type ProductQuery = {
   // Filter
   keyword: string;
   page?: string;
@@ -19,7 +19,7 @@ export type ProductQuery = {
 };
 
 searchRouter.get(
-  '',
+  '/',
   validateQuery(searchSchema),
   async (req: Request, res: Response) => {
     try {
@@ -29,7 +29,7 @@ searchRouter.get(
         page = '1',
         pricing,
         time,
-      } = req.query as unknown as ProductQuery;
+      } = req.query as ProductQuery;
       const pageNumber = parseInt(page);
 
       const [rows, fields] = await db.raw('CALL SearchProduct(?, ?, ?)', [
@@ -50,4 +50,4 @@ searchRouter.get(
 
 // ---------------------------------------------------------- //
 
-export { searchRouter };
+export default searchRouter;

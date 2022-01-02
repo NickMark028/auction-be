@@ -1,21 +1,60 @@
+// ---------------------------------------------------------------------- //
+// Configuration
 import dotenv from 'dotenv';
 dotenv.config();
 
+// ---------------------------------------------------------------------- //
+// Socket IO
+import auctionRouter from './routes/auction.router';
+// import httpServer from './socket';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { clearScreenDown } from 'readline';
+
+const httpServer = createServer();
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*',
+  },
+});
+//dùng chung 1 io =>> nhiều socket cho mỗi kết nối
+
+io.on('connection', (socket) => {
+  console.log('conection' + socket.id);
+
+  socket.on('disconnect', () => {
+    console.log(socket.id + ' disconnect');
+  });
+
+  //socket.emit('test', 'hello');
+  socket.on('bid', (data) => {
+    console.log(data);
+    io.sockets.emit('updatebid', data); // thông báo lại cho toàn bộ những socket đang theo dõi
+    //luu lai auctionlog
+  });
+});
+
+httpServer.listen(40567);
+
+// ---------------------------------------------------------------------- //
+// Express
 import express, { NextFunction, Response, ErrorRequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
-import {categoryRouter, rootRouter, searchRouter } from './routes';
-import authRouter from './routes/auth';
-import userRouter from './routes/user';
-import productRouter from './routes/product';
-// var path = require('path');
-// const authRouter = require('./routes/auth');
-// const userRouter = require('./routes/user');
-// const productRouter = require('./routes/product');
 
-// var auth = require('./middleware/auth.mdw.js');
-
+import {
+  authRouter,
+  bidderRouter,
+  categoryRouter,
+  productRouter,
+  rootRouter,
+  searchRouter,
+  sellerRouter,
+  userRouter,
+  watchListRouter,
+} from './routes';
+import { auth } from './middleware';
 const app = express();
 
 // view engine setup
@@ -26,15 +65,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
 
-app.use('/api/auth/', authRouter);
-app.use('/api/user/', userRouter);
-app.use('/api/product/', productRouter);
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: 'http://localhost:3001',
+//     methods: 'GET,PATCH,POST,DELETE',
+//   })
+// );
 
 app.use('/', rootRouter);
-app.use('/api/search', searchRouter);
+app.use('/api/auction/', auctionRouter);
+app.use('/api/auth/', authRouter);
+app.use('/api/bidder/', bidderRouter);
 app.use('/api/category', categoryRouter);
+app.use('/api/product', productRouter);
+app.use('/api/user/', userRouter);
+app.use('/api/search', searchRouter);
+app.use('/api/seller/', sellerRouter);
+app.use('/api/seller/', userRouter);
+app.use('/api/watch-list', /* auth ,*/ watchListRouter);
 
 // error handler
 // app.get('/err', function (req, res) {
@@ -48,9 +98,8 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
-  if (NODE_ENV === 'develop')
-    console.log(err.stack);
-    
+  if (NODE_ENV === 'develop') console.log(err.stack);
+
   res.status(500).json({
     error: 'Something broke!',
   });
