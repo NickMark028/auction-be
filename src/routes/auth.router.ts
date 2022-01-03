@@ -39,11 +39,11 @@ authRouter.post(
     await userModel.patch(user.id, {
       rfToken: refreshToken,
     });
-
+    delete user.password
     res.json({
       authenticated: true,
       accessToken,
-      refreshToken,
+      user_info:user,
     });
   }
 );

@@ -4,25 +4,30 @@ import schema from '../schema/product.json';
 import { validateBody } from '../middleware';
 import db from '../utils/db';
 import productModel from '../models/product.model';
-
+const multer  = require('multer')
 const productRouter = express.Router();
-
+const upload = multer();
 productRouter.post(
   '/',
-  validateBody(schema),
+ upload.none(),
   async function (req: Request, res: Response) {
     let product = req.body;
-    try {
-      const ret = await productmodel.add(product);
-      product = {
-        id: ret[0],
-        ...product,
-      };
+    // try {
+    //   const ret = await productmodel.add(product);
+    //   product = {
+    //     id: ret[0],
+    //     ...product,
+    //   };
 
-      return res.status(200).json(product);
-    } catch (err) {
-      return res.status(401).json({ error: err });
-    }
+    //   return res.status(200).json(product);
+    // } catch (err) {
+    //   return res.status(401).json({ error: err });
+    // }
+    const formData = req.body;
+    console.log('form data', formData);
+  
+    
+    return res.status(201)
   }
 );
 
@@ -126,4 +131,13 @@ productRouter.get('/related/:section', async (req, res) => {
   }
 });
 
+productRouter.get('/',async (req, res) => {
+  try {
+    const product = await productModel.findAll();
+    res.send(product).status(201);
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+
+})
 export default productRouter;
