@@ -8,8 +8,7 @@ bidderRouter.get('/:id', async (req, res) => {
   try {
     const bidder = await bidderModel.findById(req.params.id);
     res.send(bidder).status(201);
-  } 
-  catch (err) {
+  } catch (err) {
     return res.status(401).json({ error: err });
   }
 });
@@ -18,11 +17,13 @@ bidderRouter.get('/:id', async (req, res) => {
 bidderRouter.get('/product-bidded/:id', async (req, res) => {
   try {
     const rawquery = `
-    select k1.*
+    select k1.price,k3.*
     from (SELECT BV.* FROM auction.bidhistoryview BV where BV.bidderId = ${req.params.id} ) k1
     join
     (select max(price) as price from  auction.bidhistoryview B group by B.productId) k2
-    on k1.price = k2.price;`;
+    on k1.price = k2.price
+    join (select V.* from queryproductview V,auction.bidhistoryview BV2 where V.id = BV2.productId group by V.id ) k3
+    group by id`;
     const [rows, fields] = await db.raw(rawquery);
     res.send(rows).status(201);
   } catch (err) {
