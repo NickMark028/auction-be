@@ -1,6 +1,7 @@
-import express, { Request, Response } from 'express';
+import express, { query, Request, Response } from 'express';
 import sellerModel from '../models/seller.model';
 import sellerSchema from '../schema/seller.json';
+import db from '../utils/db';
 
 const sellerRouter = express.Router();
 
@@ -13,4 +14,23 @@ sellerRouter.get('/:id', async (req, res) => {
   }
 });
 
+sellerRouter.get('/allproduct/:id', async (req, res) => {
+  try {
+    const rawquery = `SELECT * FROM auction.queryproductview where sellerId=${req.params.id}`;
+    const [rows, fields] = await db.raw(rawquery);
+    res.send(rows).status(201);
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+});
+
+sellerRouter.get('/product-selling/:id', async (req, res) => {
+  try {
+    const rawquery = `SELECT * FROM auction.queryproductview where sellerId=${req.params.id} and timeExpired > (select now())`;
+    const [rows, fields] = await db.raw(rawquery);
+    res.send(rows).status(201);
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+});
 export default sellerRouter;
