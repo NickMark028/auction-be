@@ -83,7 +83,7 @@ app.use('/api/product', productRouter);
 app.use('/api/user/', userRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/seller/', sellerRouter);
-app.use('/api/seller/', userRouter);
+
 app.use('/api/watch-list', /* auth ,*/ watchListRouter);
 
 // error handler
