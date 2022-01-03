@@ -12,20 +12,20 @@ async function detailProduct(id: any) {
   return rows[0];
 }
 
-//get 6 related products
+//get 8 related products
 async function pb_related(Section: any) {
   const rows = await db('queryproductview')
-    .select(
-      'name',
-      'currentPrice',
-      'createdAt',
-      'timeExpired',
-      'auctionLogCount',
-      'coverImageUrl'
-    )
+    // .select(
+    //   'name',
+    //   'currentPrice',
+    //   'createdAt',
+    //   'timeExpired',
+    //   'auctionLogCount',
+    //   'coverImageUrl'
+    // )
     .where('section', Section)
     .orderByRaw('RAND()')
-    .limit(6);
+    .limit(8);
 
   return rows;
 }
