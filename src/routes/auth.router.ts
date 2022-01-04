@@ -39,11 +39,11 @@ authRouter.post(
     await userModel.patch(user.id, {
       rfToken: refreshToken,
     });
-    delete user.password
+    delete user.password;
     res.json({
       authenticated: true,
       accessToken,
-      user_info:user,
+      user_info: user,
     });
   }
 );
@@ -75,8 +75,7 @@ authRouter.post(
       return res.status(401).json({
         message: 'Refresh token is revoked.',
       });
-    } 
-    catch (err) {
+    } catch (err) {
       if (process.env.NODE_ENV === 'develop') console.log(err);
 
       return res.status(401).json({

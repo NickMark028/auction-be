@@ -4,12 +4,12 @@ import schema from '../schema/product.json';
 import { validateBody } from '../middleware';
 import db from '../utils/db';
 import productModel from '../models/product.model';
-const multer  = require('multer')
+const multer = require('multer');
 const productRouter = express.Router();
 const upload = multer();
 productRouter.post(
   '/',
- upload.none(),
+  upload.none(),
   async function (req: Request, res: Response) {
     let product = req.body;
     // try {
@@ -25,9 +25,8 @@ productRouter.post(
     // }
     const formData = req.body;
     console.log('form data', formData);
-  
-    
-    return res.status(201)
+
+    return res.status(201);
   }
 );
 
@@ -133,7 +132,8 @@ productRouter.get('/related/:section', async (req, res) => {
 productRouter.get('/topbidder/:id', async (req, res) => {
   try {
     const rawQuery = `
-    select * from bidhistoryview where price = (select max(price) from bidhistoryview)
+    select * from auction.bidhistoryview
+ where price = (select max(price) from auction.bidhistoryview where productId=${req.params.id}) 
     `;
     const [rows, fields] = await db.raw(rawQuery);
     res.status(200).json(rows[0]);
@@ -144,13 +144,12 @@ productRouter.get('/topbidder/:id', async (req, res) => {
   }
 });
 
-productRouter.get('/',async (req, res) => {
+productRouter.get('/', async (req, res) => {
   try {
     const product = await productModel.findAll();
     res.send(product).status(201);
   } catch (err) {
     return res.status(401).json({ error: err });
   }
-
-})
+});
 export default productRouter;

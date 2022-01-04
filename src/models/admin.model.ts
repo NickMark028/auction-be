@@ -1,7 +1,9 @@
 import db from '../utils/db';
 import generate from './generic.model';
 
-const adminDefaultModel = generate('adminview', 'id');
+const adminDefaultModel = generate('changerolelog', 'id');
 
-
-export default adminDefaultModel
+const adminModel = {
+  ...adminDefaultModel,
+};
+export default adminModel;

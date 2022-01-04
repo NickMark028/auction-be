@@ -1,8 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
+export type TJWTPayload = {
+  userId: number;
+  iat: number;
+  exp: number;
+}
 export type TRequest = Request & {
-  accessTokenPayload?: string | jwt.JwtPayload;
+  accessTokenPayload?: TJWTPayload;
 };
 
 export type TResponse = Response;
