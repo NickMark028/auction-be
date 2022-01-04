@@ -49,14 +49,14 @@ categoryRouter.delete('/',async function (req: Request, res: Response)  {
       .select();
       console.log(result)
   if(result.length===0){
-    const list = await db('category').where('id', req.body.id).del();
-    console.log(list)
+    //const list = await db('category').where('id', req.body.id).del();
+   // console.log(list)
       return res.status(201).json({
-        status:"ok"
+        status:"deleted"
       })
   }
   return res.status(404).json({
-    status:"not ok"})
+    status:"cannot delete"})
   } catch (error) {
     res.status(500).json({
       error: 'Server error',

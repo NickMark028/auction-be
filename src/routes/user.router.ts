@@ -7,27 +7,31 @@ import bidderModel from '../models/bidder.model';
 import adminModel from '../models/admin.model';
 import sellerModel from '../models/seller.model';
 import nodemailer from 'nodemailer'
+import db from '../utils/db';
 import { authenticator, totp, hotp } from 'otplib'
 
 const userRouter = express.Router();
 
 userRouter.post(
   '/',
-  validateBody(schema),
   async function (req: Request, res: Response) {
     let user = req.body;
     user.password = bcrypt.hashSync(user.password, 10);
     var ret = null;
+
+  //
+   // delete user.address
+ 
     try {
-      ret = await userModel.add(user);
+    const rawQuery = `CALL RegisterBidder(?,?,?,?,?,?,?)`;
+   ret= await db.raw(rawQuery, [user.username,user.email,user.password,user.firstName,user.lastName,user.address,user.dateOfBirth]);
+    
     } catch (err) {
       return res.status(401).json(err);
     }
-    user = {
-      id: ret[0],
-      ...user,
-    };
-    delete user.password;
+    
+    delete user.password
+    
 
     return res.status(201).json(user);
   }
@@ -101,9 +105,7 @@ userRouter.patch('/profile', async function (req: Request, res: Response) {
   }
 });
 
-userRouter.patch(
-  '/reset-password',
-  async function (req: Request, res: Response) {
+userRouter.patch( '/reset-password',  async function (req: Request, res: Response) {
     try {
       console.log(req.body);
       const ret = await userModel.findById(req.body.id);
