@@ -19,7 +19,7 @@ userRouter.post(
       return res.status(401).json(err);
     }
     user = {
-      id: ret,
+      id: ret[0],
       ...user,
     };
     delete user.password;
@@ -27,6 +27,7 @@ userRouter.post(
     return res.status(201).json(user);
   }
 );
+
 userRouter.get('/', async function (req: Request, res: Response) {
   try {
     const ret = await userModel.findAll();
@@ -35,6 +36,7 @@ userRouter.get('/', async function (req: Request, res: Response) {
     return res.status(401).json(err);
   }
 });
+
 userRouter.delete('/', async function (req: Request, res: Response) {
   console.log(req.body.id);
 
@@ -45,6 +47,7 @@ userRouter.delete('/', async function (req: Request, res: Response) {
     return res.status(401).json(err);
   }
 });
+
 userRouter.get('/profile', async function (req: Request, res: Response) {
   try {
     console.log(req.query);
@@ -71,6 +74,7 @@ userRouter.get('/profile', async function (req: Request, res: Response) {
     return res.status(404).json(error);
   }
 });
+
 userRouter.patch('/profile', async function (req: Request, res: Response) {
   try {
     console.log(req.body);
@@ -91,6 +95,7 @@ userRouter.patch('/profile', async function (req: Request, res: Response) {
     });
   }
 });
+
 userRouter.patch(
   '/reset-password',
   async function (req: Request, res: Response) {

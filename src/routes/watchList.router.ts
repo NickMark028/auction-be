@@ -12,16 +12,17 @@ watchListRouter.patch(
   validateBody(watchListSchema),
   async (req: TRequest, res: Response) => {
     try {
-      // const { id } = req.accessTokenPayload;
-      const bidderId = 1000001; //! Hard code
+      const { userId: bidderId } = req.accessTokenPayload!;
       const { productId } = req.body;
       const rawQuery = `CALL ToggleFavoriteProduct(?, ?, @isFavorite)`;
-      req.accessTokenPayload!;
+
       await db.raw(rawQuery, [bidderId, productId]);
+
       const [rows, fields] = await db.raw('SELECT @isFavorite AS isFavorite');
 
       res.status(200).json(rows[0]);
-    } catch (err) {
+    } 
+    catch (err) {
       res.status(500).json({
         error: 'Server error',
       });
@@ -31,8 +32,7 @@ watchListRouter.patch(
 
 watchListRouter.get('/', async (req: TRequest, res: Response) => {
   try {
-    // const { id } = req.accessTokenPayload;
-    const bidderId = 1000001; //! Hard code
+    const { userId: bidderId } = req.accessTokenPayload!;
     const rawQuery = `
             SELECT	PV.*, WLV.createdAt AS dateFavorited
             FROM	WatchListView WLV

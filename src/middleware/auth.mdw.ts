@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import { TRequest } from '../types';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { TJWTPayload, TRequest } from '../types';
 
 export default function auth(req: TRequest, res: Response, next: NextFunction) {
   const accessToken = req.headers['authorization'] as string | undefined;
@@ -11,7 +11,8 @@ export default function auth(req: TRequest, res: Response, next: NextFunction) {
         accessToken.slice('Bearer '.length),
         'SECRET_KEY'
       );
-      req.accessTokenPayload = decoded as string;
+      req.accessTokenPayload = decoded as TJWTPayload;
+      
       next();
     } catch (err) {
       if (process.env.NODE_ENV === 'develop') console.log(err);
