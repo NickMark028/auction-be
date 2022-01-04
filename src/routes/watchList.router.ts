@@ -16,7 +16,7 @@ watchListRouter.patch(
       const bidderId = 1000001; //! Hard code
       const { productId } = req.body;
       const rawQuery = `CALL ToggleFavoriteProduct(?, ?, @isFavorite)`;
-
+req.accessTokenPayload!
       await db.raw(rawQuery, [bidderId, productId]);
       const [rows, fields] = await db.raw('SELECT @isFavorite AS isFavorite');
 

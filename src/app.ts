@@ -85,7 +85,7 @@ app.use('/api/user/', userRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/seller/', sellerRouter);
 
-app.use('/api/watch-list', /* auth ,*/ watchListRouter);
+app.use('/api/watch-list', auth , watchListRouter);
 
 app.use('/api/admin/', adminRouter);
 
