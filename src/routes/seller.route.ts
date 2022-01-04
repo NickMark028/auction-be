@@ -33,4 +33,14 @@ sellerRouter.get('/product-selling/:id', async (req, res) => {
     return res.status(401).json({ error: err });
   }
 });
+
+sellerRouter.get('/checkrole/:id', async (req, res) => {
+  try {
+    const rawquery = `SELECT * FROM auction.seller where id=${req.params.id} and active = 1`;
+    const [rows, fields] = await db.raw(rawquery);
+    res.send(rows[0]).status(201);
+  } catch (err) {
+    return res.status(401).json({ error: err });
+  }
+});
 export default sellerRouter;
