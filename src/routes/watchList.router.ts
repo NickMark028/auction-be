@@ -34,10 +34,11 @@ watchListRouter.get('/', async (req: TRequest, res: Response) => {
   try {
     const { userId: bidderId } = req.accessTokenPayload!;
     const rawQuery = `
-            SELECT	PV.*, WLV.createdAt AS dateFavorited
-            FROM	WatchListView WLV
-            JOIN 	ProductView PV ON PV.id = WLV.productId
-            WHERE 	WLV.bidderId = ?;
+            SELECT		PV.*, WLV.createdAt AS dateFavorited
+            FROM	  	WatchListView WLV
+            JOIN 	  	ProductView PV ON PV.id = WLV.productId
+            WHERE 		WLV.bidderId = ?
+            ORDER BY	PV.id DESC;
         `;
     const [rows, fields] = await db.raw(rawQuery, [bidderId]);
 

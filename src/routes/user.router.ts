@@ -11,7 +11,7 @@ import nodemailer from 'nodemailer'
 import db from '../utils/db';
 import { authenticator, totp, hotp } from 'otplib'
 
-totp.options = { digits: 6,step: 3000 };
+totp.options = { digits: 6, step: 3000 };
 const userRouter = express.Router();
 
 userRouter.post(
@@ -19,23 +19,21 @@ userRouter.post(
   async function (req: Request, res: Response) {
     let user = req.body;
     user.password = bcrypt.hashSync(user.password, 10);
-    var ret = null;
 
-  //
-   // delete user.address
- 
     try {
-    const rawQuery = `CALL RegisterBidder(?,?,?,?,?,?,?)`;
-   ret= await db.raw(rawQuery, [user.username,user.email,user.password,user.firstName,user.lastName,user.address,user.dateOfBirth]);
-    
-    } catch (err) {
-      return res.status(401).json(err);
-    }
-    
-    delete user.password
-    
+      const rawQuery = `CALL RegisterBidder(?, ?, ?, ?, ?, ?, ?);`;
+      await db.raw(rawQuery, [user.username, user.email, user.password, user.firstName, user.lastName, user.address, user.dateOfBirth]);
 
-    return res.status(201).json(user);
+    }
+    catch (err) {
+      return res.status(400).json({
+        errorMsg: err
+      });
+    }
+
+    delete user.password
+
+    return res.status(201).send();
   }
 );
 
@@ -107,63 +105,63 @@ userRouter.patch('/profile', async function (req: Request, res: Response) {
   }
 });
 
-userRouter.patch( '/reset-password',  async function (req: Request, res: Response) {
-    try {
-      console.log(req.body);
-      const ret = await userModel.findById(req.body.id);
-      if (!bcrypt.compareSync(req.body.current_pass, ret.password)) {
-        return res.status(404).json({
-          status: 'wrong password',
-        });
-      }
-      const newpass = bcrypt.hashSync(req.body.new_pass, 10);
-      await userModel.patch(req.body.id, {
-        password: newpass,
+userRouter.patch('/reset-password', async function (req: Request, res: Response) {
+  try {
+    console.log(req.body);
+    const ret = await userModel.findById(req.body.id);
+    if (!bcrypt.compareSync(req.body.current_pass, ret.password)) {
+      return res.status(404).json({
+        status: 'wrong password',
       });
-      return res.status(201).json({
-        status: 'update complete',
-      });
-    } catch (error) {
-      return res.status(404).json(error);
     }
+    const newpass = bcrypt.hashSync(req.body.new_pass, 10);
+    await userModel.patch(req.body.id, {
+      password: newpass,
+    });
+    return res.status(201).json({
+      status: 'update complete',
+    });
+  } catch (error) {
+    return res.status(404).json(error);
   }
- )
-userRouter.post('/role',async function (req: Request, res: Response){
-  var role =null;
-try {
-  if(await adminModel.findById(req.body.id)!=null){
-    role='admin'
-    }
-    if(await sellerModel.findById(req.body.id)!=null){
-      role='seller'
-      }
-      if(await bidderModel.findById(req.body.id)!=null){
-        role='bidder'
-        }
-        if(role==null){
-          return res.status(404).json({
-            status:"role not found"
-          })
-        }
-        return res.status(201).json({
-          role:role
-        })
-  
-
-} catch (error) {
-  return res.status(401).json({
-    status:error
-  })
 }
+)
+userRouter.post('/role', async function (req: Request, res: Response) {
+  var role = null;
+  try {
+    if (await adminModel.findById(req.body.id) != null) {
+      role = 'admin'
+    }
+    if (await sellerModel.findById(req.body.id) != null) {
+      role = 'seller'
+    }
+    if (await bidderModel.findById(req.body.id) != null) {
+      role = 'bidder'
+    }
+    if (role == null) {
+      return res.status(404).json({
+        status: "role not found"
+      })
+    }
+    return res.status(201).json({
+      role: role
+    })
+
+
+  } catch (error) {
+    return res.status(401).json({
+      status: error
+    })
+  }
 
 })
-userRouter.post('/mail',async function (req: Request, res: Response){
+userRouter.post('/mail', async function (req: Request, res: Response) {
   totp.resetOptions()
 
-  const otp =totp.generate(req.body.email);
-   
+  const otp = totp.generate(req.body.email);
+
   console.log(otp)
- 
+
   let transporter = nodemailer.createTransport({
     host: "in-v3.mailjet.com",
     port: 587,
@@ -184,20 +182,21 @@ userRouter.post('/mail',async function (req: Request, res: Response){
 
   // Preview only available when sending through an Ethereal account
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  
-  
- 
-  return res.status(201).json({status:"ok"})
+
+
+
+  return res.status(201).json({ status: "ok" })
 })
-userRouter.post('/verify-otp',async function(req: Request, res: Response){
+userRouter.post('/verify-otp', async function (req: Request, res: Response) {
   console.log(req.body)
-  const check =totp.check(req.body.otp,req.body.email)
+  const check = totp.check(req.body.otp, req.body.email)
   console.log(check)
- //console.log(totp.verify({token:req.body.otp,secret:req.body.email}))
+  //console.log(totp.verify({token:req.body.otp,secret:req.body.email}))
   console.log(totp.timeRemaining())
-  if(check){
-  return res.status(201).json({status:check})}
-  return res.status(401).json({status:check})
+  if (check) {
+    return res.status(201).json({ status: check })
+  }
+  return res.status(401).json({ status: check })
 
 })
 

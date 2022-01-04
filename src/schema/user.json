@@ -16,6 +16,9 @@
     "email": {
       "type": "string"
     },
+    "address": {
+      "type": "string"
+    },
     "dateOfBirth": {
       "type": "string"
     }
@@ -26,6 +29,7 @@
     "firstName",
     "lastName",
     "email",
+    "address",
     "dateOfBirth"
   ],
   "additionalProperties": false
