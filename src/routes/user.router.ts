@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { validateBody } from '../middleware';
 import bcrypt from 'bcryptjs';
 import userModel from '../models/user.model';
+
 import schema from '../schema/user.json';
 import bidderModel from '../models/bidder.model';
 import adminModel from '../models/admin.model';
