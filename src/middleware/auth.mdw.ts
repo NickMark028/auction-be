@@ -7,12 +7,13 @@ export default function auth(req: TRequest, res: Response, next: NextFunction) {
 
   if (accessToken) {
     try {
-      const decoded = jwt.verify(accessToken.slice('Bearer '.length), 'SECRET_KEY');
-      console.log(decoded);
+      const decoded = jwt.verify(
+        accessToken.slice('Bearer '.length),
+        'SECRET_KEY'
+      );
       req.accessTokenPayload = decoded as string;
       next();
-    }
-    catch (err) {
+    } catch (err) {
       if (process.env.NODE_ENV === 'develop') console.log(err);
 
       return res.status(401).json({
