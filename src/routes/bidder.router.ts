@@ -31,4 +31,25 @@ bidderRouter.get('/product-bidded/:id', async (req, res) => {
   }
 });
 
+//Yêu cầu được thành seller
+bidderRouter.post('/changeRole/:id', async (req, res) => {
+  try {
+    const change = await bidderModel.changeRole(req.params.id);
+    res.status(201).send('request successfull!');
+  } catch (error) {
+    res.send(error).status(401);
+  }
+});
+
+bidderRouter.patch('/cancelRole/:id', async (req, res) => {
+  try {
+    const rawquery = `
+    update auction.changerolelog set statusCode= 300 where bidderId = ${req.params.id}
+    `;
+    await db.raw(rawquery);
+    res.status(201).send('cancel successfull!');
+  } catch (error) {
+    res.send(error).status(401);
+  }
+});
 export default bidderRouter;

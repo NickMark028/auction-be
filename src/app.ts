@@ -54,6 +54,7 @@ import {
   userRouter,
   watchListRouter,
 } from './routes';
+import adminRouter from './routes/admin.router';
 import { auth } from './middleware';
 const app = express();
 
@@ -85,6 +86,8 @@ app.use('/api/search', searchRouter);
 app.use('/api/seller/', sellerRouter);
 
 app.use('/api/watch-list', /* auth ,*/ watchListRouter);
+
+app.use('/api/admin/', adminRouter);
 
 // error handler
 // app.get('/err', function (req, res) {

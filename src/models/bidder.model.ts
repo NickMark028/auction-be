@@ -12,9 +12,26 @@ async function detailBidder(id: any) {
   return rows[0];
 }
 
+async function changeRole(id: any) {
+  const Role = await db('changeRoleLog').insert([
+    {
+      bidderId: id,
+      statusCode: 100,
+      message: 'Wanting to be a seller',
+    },
+  ]);
+
+  if (Role.length === 0) {
+    return Role.toString();
+  }
+
+  return Role[0];
+}
+
 const bidderModel = {
   ...bidderDefaultModel,
   detailBidder,
+  changeRole,
 };
 
 export default bidderModel;
