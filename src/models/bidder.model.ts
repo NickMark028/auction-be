@@ -24,7 +24,6 @@ async function changeRole(id: any) {
   if (Role.length === 0) {
     return Role.toString();
   }
-
   return Role[0];
 }
 
