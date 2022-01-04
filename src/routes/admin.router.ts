@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
 import adminModel from '../models/admin.model';
+import generate from '../models/generic.model';
 import db from '../utils/db';
 const adminRouter = express.Router();
-
+const adminSecondmodel = generate('admin', 'id');
 //danh sách nâng cấp tài khoản
 adminRouter.get('/change-role-view', async (req, res) => {
   const rawquery = `
@@ -58,4 +59,23 @@ adminRouter.patch('/downgradeRole/:id', async (req, res) => {
     });
   }
 });
+ adminRouter.post('/check-role',async (req, res) =>{
+try {
+  const check = await adminSecondmodel.findById(req.body.id)
+  if(check!=null){
+    return res.status(201).json({
+      role:"admin"
+    })
+  }
+  return res.status(404).json({
+    role:"not admin"
+  })
+} catch (error) {
+  return res.status(404).json({
+    error
+  })
+}
+  
+ })
+
 export default adminRouter;

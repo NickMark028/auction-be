@@ -39,7 +39,9 @@ authRouter.post(
     await userModel.patch(user.id, {
       rfToken: refreshToken,
     });
+    
     delete user.password;
+    user.rfToken = refreshToken
     res.json({
       authenticated: true,
       accessToken,
@@ -63,11 +65,11 @@ authRouter.post(
       const ret = await userModel.isValidRefreshToken(userId, refreshToken);
       if (ret === true) {
         const opts = {
-          expiresIn: 10, // seconds
+          expiresIn: 1000, // seconds
         };
         const payload = { userId };
         const new_accessToken = jwt.sign(payload, 'SECRET_KEY', opts);
-        return res.json({
+        return res.status(201).json({
           accessToken: new_accessToken,
         });
       }
