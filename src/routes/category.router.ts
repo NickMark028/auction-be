@@ -41,4 +41,28 @@ categoryRouter.get('/:path', async (req: Request, res: Response) => {
 
 // ---------------------------------------------------------- //
 
+categoryRouter.delete('/',async function (req: Request, res: Response)  {
+  try {
+    const path = req.body.path;
+    const result = await db('QueryProductView')
+      .where({ categoryPath: path })
+      .select();
+      console.log(result)
+  if(result.length===0){
+    const list = await db('category').where('id', req.body.id).del();
+    console.log(list)
+      return res.status(201).json({
+        status:"ok"
+      })
+  }
+  return res.status(404).json({
+    status:"not ok"})
+  } catch (error) {
+    res.status(500).json({
+      error: 'Server error',
+    });
+  }
+
+} )
+
 export default categoryRouter;
