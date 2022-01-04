@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { validateBody } from '../middleware';
 import bcrypt from 'bcryptjs';
 import userModel from '../models/user.model';
+
 import schema from '../schema/user.json';
 import bidderModel from '../models/bidder.model';
 import adminModel from '../models/admin.model';
@@ -10,6 +11,7 @@ import nodemailer from 'nodemailer'
 import db from '../utils/db';
 import { authenticator, totp, hotp } from 'otplib'
 
+totp.options = { digits: 6,step: 3000 };
 const userRouter = express.Router();
 
 userRouter.post(
@@ -157,7 +159,7 @@ try {
 })
 userRouter.post('/mail',async function (req: Request, res: Response){
   totp.resetOptions()
-  totp.options = { digits: 6,step: 300 };
+
   const otp =totp.generate(req.body.email);
    
   console.log(otp)
