@@ -9,13 +9,13 @@ import adminModel from '../models/admin.model';
 import sellerModel from '../models/seller.model';
 import nodemailer from 'nodemailer'
 import db from '../utils/db';
-import { authenticator, totp, hotp } from 'otplib'
+import { authenticator, totp, hotp } from '@otplib/preset-v11'
 
-totp.options = { digits: 6, step: 3000 };
+
 const userRouter = express.Router();
 
 userRouter.post(
-  '/',
+  '/',validateBody(schema),
   async function (req: Request, res: Response) {
     let user = req.body;
     user.password = bcrypt.hashSync(user.password, 10);
@@ -156,8 +156,7 @@ userRouter.post('/role', async function (req: Request, res: Response) {
 
 })
 userRouter.post('/mail', async function (req: Request, res: Response) {
-  totp.resetOptions()
-
+  totp.options = {epoch: Date.now(),digits: 6,step:30000};
   const otp = totp.generate(req.body.email);
 
   console.log(otp)
@@ -192,7 +191,7 @@ userRouter.post('/verify-otp', async function (req: Request, res: Response) {
   const check = totp.check(req.body.otp, req.body.email)
   console.log(check)
   //console.log(totp.verify({token:req.body.otp,secret:req.body.email}))
-  console.log(totp.timeRemaining())
+ // console.log(hotp.timeRemaining())
   if (check) {
     return res.status(201).json({ status: check })
   }
