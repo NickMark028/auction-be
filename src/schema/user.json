@@ -21,7 +21,11 @@
     },
     "dateOfBirth": {
       "type": "string"
+    }, 
+    "address": {
+      "type": "string"
     }
+
   },
   "required": [
     "username",

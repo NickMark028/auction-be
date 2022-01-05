@@ -1,32 +1,73 @@
 import express, { Request, Response } from 'express';
-import productmodel from '../models/product.model';
 import schema from '../schema/product.json';
 import { validateBody } from '../middleware';
+const cloudinary =require('cloudinary')
 import db from '../utils/db';
 import productModel from '../models/product.model';
-const multer = require('multer');
+import sellerModel from '../models/seller.model';
+
 const productRouter = express.Router();
-const upload = multer();
+cloudinary.config({ 
+  cloud_name: process.env.IC_NAME, 
+  api_key: process.env.IC_API_KEY, 
+  api_secret: 
+  process.env.IC_SECRET
+});
 productRouter.post(
   '/',
-  upload.none(),
   async function (req: Request, res: Response) {
-    let product = req.body;
-    // try {
-    //   const ret = await productmodel.add(product);
-    //   product = {
-    //     id: ret[0],
-    //     ...product,
-    //   };
+    let product = req.body.product;
+  
+   // console.log(req.body.product.coverImageUrl)
+    try {
+      const check = await sellerModel.findById(product.sellerId)
+      if(check==null){
+        return res.status(404).json({status:"you are not seller"})
+      }
+    } catch (error) {
+      return res.status(404).json({status:error})
+    }
+    
+    try {
+      await  cloudinary.v2.uploader.upload(product.coverImageUrl,
+        { public_id: product.name +"_cover"}, 
+        function(error:any, result:any) {
+          if(result!=undefined){
+          product.coverImageUrl=result.url
+        }
+        
+        })
+        const temp:any=[];
+        var i=0;
+     for(const element of product.productImage) {
+        await  cloudinary.v2.uploader.upload(element,
+            { public_id: product.name +"_image"+i}, 
+          async  function(error:any, result:any) {
+            if(result!=undefined){
+              // element=result.url
+                temp.push(result.url)
+              }
+            
+            });
+    
+            i++
+        }
+  
+        delete product.productImage
+      
+      const ret = await productModel.add(product);
+      product = {
+        id: ret[0],
+        ...product,
+      };
+      temp.forEach(async(element: any) => {
+       await productModel.addimage(product.id,element)
+      });
+      return res.status(200).json(product);
+    } catch (err) {
+      return res.status(401).json({ error: err });
+    }
 
-    //   return res.status(200).json(product);
-    // } catch (err) {
-    //   return res.status(401).json({ error: err });
-    // }
-    const formData = req.body;
-    console.log('form data', formData);
-
-    return res.status(201);
   }
 );
 
@@ -81,27 +122,6 @@ productRouter.get('/top-auction-log', async (req: Request, res: Response) => {
   }
 });
 
-productRouter.post(
-  '/',
-  // validate(schema),
-  async function (req: Request, res: Response) {
-    let product = req.body;
-    let ret = null;
-    try {
-      ret = await productModel.add(product);
-    } catch (err) {
-      return res.status(401).json({ error: err });
-    }
-
-    product = {
-      id: ret[0],
-      ...product,
-    };
-
-    return res.status(200).json(product);
-  }
-);
-
 productRouter.get('/:id', async (req, res) => {
   try {
     const product = await productModel.detailProduct(req.params.id);
@@ -152,4 +172,16 @@ productRouter.get('/', async (req, res) => {
     return res.status(401).json({ error: err });
   }
 });
+
+productRouter.delete('/',async (req, res) => {
+  try {
+  await  productModel.removeById(req.body.id)
+    return res.status(200).json({
+      status:"delete success"
+    })
+  } catch (error) {
+    return res.status(401).json({
+      status:error
+  })
+}})
 export default productRouter;
