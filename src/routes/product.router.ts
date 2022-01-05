@@ -4,7 +4,7 @@ import { validateBody } from '../middleware';
 const cloudinary =require('cloudinary')
 import db from '../utils/db';
 import productModel from '../models/product.model';
-
+import sellerModel from '../models/seller.model';
 
 const productRouter = express.Router();
 cloudinary.config({ 
@@ -19,34 +19,41 @@ productRouter.post(
     let product = req.body.product;
   
    // console.log(req.body.product.coverImageUrl)
-  await  cloudinary.v2.uploader.upload(product.coverImageUrl,
-    { public_id: product.name +"_cover"}, 
-    function(error:any, result:any) {
-      if(result!=undefined){
-      product.coverImageUrl=result.url
+    try {
+      const check = await sellerModel.findById(product.sellerId)
+      if(check==null){
+        return res.status(404).json({status:"you are not seller"})
+      }
+    } catch (error) {
+      return res.status(404).json({status:error})
     }
     
-    });
-    const temp:any=[];
-    var i=0;
- for(const element of product.productImage) {
-    await  cloudinary.v2.uploader.upload(element,
-        { public_id: product.name +"_image"+i}, 
-      async  function(error:any, result:any) {
-        if(result!=undefined){
-          // element=result.url
-            temp.push(result.url)
-          }
-        
-        });
-
-        i++
-    };
-
-    console.log(product.productImagemp)
-    delete product.productImage
     try {
-      console.log(temp)
+      await  cloudinary.v2.uploader.upload(product.coverImageUrl,
+        { public_id: product.name +"_cover"}, 
+        function(error:any, result:any) {
+          if(result!=undefined){
+          product.coverImageUrl=result.url
+        }
+        
+        })
+        const temp:any=[];
+        var i=0;
+     for(const element of product.productImage) {
+        await  cloudinary.v2.uploader.upload(element,
+            { public_id: product.name +"_image"+i}, 
+          async  function(error:any, result:any) {
+            if(result!=undefined){
+              // element=result.url
+                temp.push(result.url)
+              }
+            
+            });
+    
+            i++
+        }
+  
+        delete product.productImage
       
       const ret = await productModel.add(product);
       product = {
