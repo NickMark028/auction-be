@@ -13,9 +13,7 @@ cloudinary.config({
   api_secret: 
   process.env.IC_SECRET
 });
-productRouter.post(
-  '/',
-  async function (req: Request, res: Response) {
+productRouter.post( '/', async function (req: Request, res: Response) {
     let product = req.body.product;
   
    // console.log(req.body.product.coverImageUrl)
@@ -27,10 +25,10 @@ productRouter.post(
     } catch (error) {
       return res.status(404).json({status:error})
     }
-    
+    const time = new Date().getTime();
     try {
       await  cloudinary.v2.uploader.upload(product.coverImageUrl,
-        { public_id: product.name +"_cover"}, 
+        { public_id: product.name +"_cover_"+time,folder:process.env.IMG_FOLDER+product.sellerId+'/'+time}, 
         function(error:any, result:any) {
           if(result!=undefined){
           product.coverImageUrl=result.url
@@ -41,7 +39,7 @@ productRouter.post(
         var i=0;
      for(const element of product.productImage) {
         await  cloudinary.v2.uploader.upload(element,
-            { public_id: product.name +"_image"+i}, 
+            { public_id: product.name +"_image("+i+")"+time,folder:process.env.IMG_FOLDER+product.sellerId+'/'+time}, 
           async  function(error:any, result:any) {
             if(result!=undefined){
               // element=result.url

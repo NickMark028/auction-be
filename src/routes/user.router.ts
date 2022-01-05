@@ -129,13 +129,13 @@ userRouter.patch('/reset-password', async function (req: Request, res: Response)
 userRouter.post('/role', async function (req: Request, res: Response) {
   var role = null;
   try {
-    if (await adminModel.findById(req.body.id) != null) {
+    if (await adminModel.findadmin(req.body.id) != null) {
       role = 'admin'
     }
-    if (await sellerModel.findById(req.body.id) != null) {
+    if (await sellerModel.findseller(req.body.id) != null) {
       role = 'seller'
     }
-    if (await bidderModel.findById(req.body.id) != null) {
+    if (await bidderModel.findById(req.body.id) != null&&role==null) {
       role = 'bidder'
     }
     if (role == null) {
