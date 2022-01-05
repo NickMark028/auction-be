@@ -28,7 +28,7 @@ authRouter.post(
     }
 
     const opts = {
-      expiresIn: 10 * 60, // seconds
+      expiresIn: 1 * 60, // seconds
     };
     const payload = {
       userId: user.id,
@@ -39,7 +39,7 @@ authRouter.post(
     await userModel.patch(user.id, {
       rfToken: refreshToken,
     });
-    
+
     delete user.password;
     user.rfToken = refreshToken
     res.json({
@@ -77,8 +77,10 @@ authRouter.post(
       return res.status(401).json({
         message: 'Refresh token is revoked.',
       });
-    } catch (err) {
-      if (process.env.NODE_ENV === 'develop') console.log(err);
+    }
+    catch (err) {
+      // if (process.env.NODE_ENV === 'develop')
+      //   console.log(err);
 
       return res.status(401).json({
         message: 'Invalid access token.',
