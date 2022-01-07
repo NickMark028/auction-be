@@ -16,6 +16,8 @@ cloudinary.config({
 productRouter.post( '/', async function (req: Request, res: Response) {
     let product = req.body.product;
   
+
+ //   return res.status(201).json({status:"ok"})
    // console.log(req.body.product.coverImageUrl)
     try {
       const check = await sellerModel.findById(product.sellerId)
@@ -26,9 +28,14 @@ productRouter.post( '/', async function (req: Request, res: Response) {
       return res.status(404).json({status:error})
     }
     const time = new Date().getTime();
+  
+    const category=product.category
+
     try {
       await  cloudinary.v2.uploader.upload(product.coverImageUrl,
-        { public_id: product.name +"_cover_"+time,folder:process.env.IMG_FOLDER+product.sellerId+'/'+time}, 
+        { 
+          public_id: product.name +"_cover_"+time,
+          folder: process.env.IMG_FOLDER+product.sellerId+'/'+time}, 
         function(error:any, result:any) {
           if(result!=undefined){
           product.coverImageUrl=result.url
@@ -39,7 +46,9 @@ productRouter.post( '/', async function (req: Request, res: Response) {
         var i=0;
      for(const element of product.productImage) {
         await  cloudinary.v2.uploader.upload(element,
-            { public_id: product.name +"_image("+i+")"+time,folder:process.env.IMG_FOLDER+product.sellerId+'/'+time}, 
+            { 
+              public_id: product.name +"_image("+i+")"+time,
+              folder: process.env.IMG_FOLDER+product.sellerId+'/'+time}, 
           async  function(error:any, result:any) {
             if(result!=undefined){
               // element=result.url
@@ -52,12 +61,18 @@ productRouter.post( '/', async function (req: Request, res: Response) {
         }
   
         delete product.productImage
-      
+        delete product.category
+ 
       const ret = await productModel.add(product);
       product = {
         id: ret[0],
         ...product,
       };
+
+      await productModel.addBidded(product.id,product.reservedPrice)
+      category.forEach(async(element: any) => {
+        await productModel.addCategory(product.id,element.id)
+      });
       temp.forEach(async(element: any) => {
        await productModel.addimage(product.id,element)
       });
@@ -134,6 +149,7 @@ productRouter.get('/detailproduct/:id', async (req, res) => {
     const product = await productModel.detailProduct(req.params.id);
     res.send(product).status(201);
   } catch (err) {
+    console.log(err)
     return res.status(401).json({ error: err });
   }
 });
