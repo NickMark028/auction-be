@@ -7,31 +7,37 @@ import schema from '../schema/user.json';
 import bidderModel from '../models/bidder.model';
 import adminModel from '../models/admin.model';
 import sellerModel from '../models/seller.model';
-import nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer';
 import db from '../utils/db';
-import { authenticator, totp, hotp } from '@otplib/preset-v11'
-
+import { authenticator, totp, hotp } from '@otplib/preset-v11';
 
 const userRouter = express.Router();
 
 userRouter.post(
-  '/',validateBody(schema),
+  '/',
+  validateBody(schema),
   async function (req: Request, res: Response) {
     let user = req.body;
     user.password = bcrypt.hashSync(user.password, 10);
 
     try {
       const rawQuery = `CALL RegisterBidder(?, ?, ?, ?, ?, ?, ?);`;
-      await db.raw(rawQuery, [user.username, user.email, user.password, user.firstName, user.lastName, user.address, user.dateOfBirth]);
-
-    }
-    catch (err) {
+      await db.raw(rawQuery, [
+        user.username,
+        user.email,
+        user.password,
+        user.firstName,
+        user.lastName,
+        user.address,
+        user.dateOfBirth,
+      ]);
+    } catch (err) {
       return res.status(400).json({
-        errorMsg: err
+        errorMsg: err,
       });
     }
 
-    delete user.password
+    delete user.password;
 
     return res.status(201).send();
   }
@@ -105,98 +111,94 @@ userRouter.patch('/profile', async function (req: Request, res: Response) {
   }
 });
 
-userRouter.patch('/reset-password', async function (req: Request, res: Response) {
-  try {
-    console.log(req.body);
-    const ret = await userModel.findById(req.body.id);
-    if (!bcrypt.compareSync(req.body.current_pass, ret.password)) {
-      return res.status(404).json({
-        status: 'wrong password',
+userRouter.patch(
+  '/reset-password',
+  async function (req: Request, res: Response) {
+    try {
+      console.log(req.body);
+      const ret = await userModel.findById(req.body.id);
+      if (!bcrypt.compareSync(req.body.current_pass, ret.password)) {
+        return res.status(404).json({
+          status: 'wrong password',
+        });
+      }
+      const newpass = bcrypt.hashSync(req.body.new_pass, 10);
+      await userModel.patch(req.body.id, {
+        password: newpass,
       });
+      return res.status(201).json({
+        status: 'update complete',
+      });
+    } catch (error) {
+      return res.status(404).json(error);
     }
-    const newpass = bcrypt.hashSync(req.body.new_pass, 10);
-    await userModel.patch(req.body.id, {
-      password: newpass,
-    });
-    return res.status(201).json({
-      status: 'update complete',
-    });
-  } catch (error) {
-    return res.status(404).json(error);
   }
-}
-)
+);
 userRouter.post('/role', async function (req: Request, res: Response) {
   var role = null;
   try {
-    if (await adminModel.findadmin(req.body.id) != null) {
-      role = 'admin'
+    if ((await adminModel.findadmin(req.body.id)) != null) {
+      role = 'admin';
     }
-    if (await sellerModel.findseller(req.body.id) != null) {
-      role = 'seller'
+    if ((await sellerModel.findseller(req.body.id)) != null) {
+      role = 'seller';
     }
-    if (await bidderModel.findById(req.body.id) != null&&role==null) {
-      role = 'bidder'
+    if ((await bidderModel.findById(req.body.id)) != null && role == null) {
+      role = 'bidder';
     }
     if (role == null) {
       return res.status(404).json({
-        status: "role not found"
-      })
+        status: 'role not found',
+      });
     }
     return res.status(201).json({
-      role: role
-    })
-
-
+      role: role,
+    });
   } catch (error) {
     return res.status(401).json({
-      status: error
-    })
+      status: error,
+    });
   }
-
-})
+});
 userRouter.post('/mail', async function (req: Request, res: Response) {
-  totp.options = {epoch: Date.now(),digits: 6,step:30000};
+  totp.options = { epoch: Date.now(), digits: 6, step: 30000 };
   const otp = totp.generate(req.body.email);
 
-  console.log(otp)
+  console.log(otp);
 
   let transporter = nodemailer.createTransport({
-    host: "in-v3.mailjet.com",
+    host: 'in-v3.mailjet.com',
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: "538ef709ea08018d00e775be273dbad0", // generated ethereal user
-      pass: "77272a7ae582733d53e54c790d4c9aa3", // generated ethereal password
+      user: '538ef709ea08018d00e775be273dbad0', // generated ethereal user
+      pass: '77272a7ae582733d53e54c790d4c9aa3', // generated ethereal password
     },
   });
   let info = await transporter.sendMail({
     from: '"Anh Tu - do not reply" <18127243@student.hcmus.edu.vn>', // sender address
     to: req.body.email, // list of receivers
-    subject: "Email from auction please do not reply", // Subject line
-    text: "Hello world from tu with love your otp is:" + otp, // plain text body
+    subject: 'Email from auction please do not reply', // Subject line
+    text: 'Hello world from tu with love your otp is:' + otp, // plain text body
   });
-  console.log("Message sent: %s", info.messageId);
+  console.log('Message sent: %s', info.messageId);
   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
   // Preview only available when sending through an Ethereal account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-
-
-  return res.status(201).json({ status: "ok" })
-})
+  return res.status(201).json({ status: 'ok' });
+});
 userRouter.post('/verify-otp', async function (req: Request, res: Response) {
-  console.log(req.body)
-  const check = totp.check(req.body.otp, req.body.email)
-  console.log(check)
+  console.log(req.body);
+  const check = totp.check(req.body.otp, req.body.email);
+  console.log(check);
   //console.log(totp.verify({token:req.body.otp,secret:req.body.email}))
- // console.log(hotp.timeRemaining())
+  // console.log(hotp.timeRemaining())
   if (check) {
-    return res.status(201).json({ status: check })
+    return res.status(201).json({ status: check });
   }
-  return res.status(401).json({ status: check })
-
-})
+  return res.status(401).json({ status: check });
+});
 
 export default userRouter;

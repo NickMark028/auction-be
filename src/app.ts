@@ -54,6 +54,7 @@ import {
   watchListRouter,
 } from './routes';
 import adminRouter from './routes/admin.router';
+import winnerRouter from './routes/winner.router';
 import { auth } from './middleware';
 const app = express();
 
@@ -86,11 +87,36 @@ app.use('/api/search', searchRouter);
 app.use('/api/seller/', sellerRouter);
 app.use('/api/watch-list', auth, watchListRouter);
 app.use('/api/admin/', adminRouter);
-
+app.use('/api/winner/', winnerRouter);
 // error handler
 // app.get('/err', function (req, res) {
 //   throw new Error('Error!');
 // });
+
+import db from './utils/db';
+// console.log('mail');
+// app.use((req, res, next) => {
+//   // const rawquery = `SEECT U.email,B.name, B.currentPrice,b.topbidder,B.topbidderId FROM auction.queryproductdetailview B, user U where B.topBidderId = U.id and B.timeExpired < (select now())`;
+//   console.log('auto mail');
+//   // setInterval(async () => {
+//   //   const rawquery = `SELECT B.*
+//   //   FROM auction.queryproductdetailview B where B.timeExpired > (select now())`;
+//   //   const [rows, fields] = await db.raw(rawquery);
+//   //   console.log(rows);
+//   // }, 1000);
+// });
+import {
+  auto_mail_bidder,
+  auto_mail_seller_nothing,
+  auto_mail_seller_sold,
+} from './auto';
+import { setInterval } from 'timers';
+// app.get('/mail', auto_mail);
+// setInterval(function () {
+//   auto_mail_bidder();
+//   auto_mail_seller_nothing(),
+//   auto_mail_seller_sold()
+// }, 5000);
 
 app.use(function (req, res, next) {
   res.status(404).json({
