@@ -70,6 +70,7 @@ productRouter.post( '/', async function (req: Request, res: Response) {
       };
 
       await productModel.addBidded(product.id,product.reservedPrice)
+
       category.forEach(async(element: any) => {
         await productModel.addCategory(product.id,element.id)
       });
@@ -198,4 +199,16 @@ productRouter.delete('/',async (req, res) => {
       status:error
   })
 }})
+
+productRouter.post('/update',async (req, res) =>{
+try {
+  const value =await productModel.updateDescription(req.body.id,req.body.value);
+  return res.status(201).json({value:value})
+} catch (error) {
+  return res.status(400).json({error})
+}
+ 
+})
+
+
 export default productRouter;
