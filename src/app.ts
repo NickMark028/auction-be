@@ -93,6 +93,23 @@ app.use('/api/winner/', winnerRouter);
 //   throw new Error('Error!');
 // });
 
+import db from './utils/db';
+// console.log('mail');
+// app.use((req, res, next) => {
+//   // const rawquery = `SEECT U.email,B.name, B.currentPrice,b.topbidder,B.topbidderId FROM auction.queryproductdetailview B, user U where B.topBidderId = U.id and B.timeExpired < (select now())`;
+//   console.log('auto mail');
+//   // setInterval(async () => {
+//   //   const rawquery = `SELECT B.*
+//   //   FROM auction.queryproductdetailview B where B.timeExpired > (select now())`;
+//   //   const [rows, fields] = await db.raw(rawquery);
+//   //   console.log(rows);
+//   // }, 1000);
+// });
+import { auto_mail } from './auto';
+import { setInterval } from 'timers';
+// app.get('/mail', auto_mail);
+setInterval(auto_mail, 5000);
+
 app.use(function (req, res, next) {
   res.status(404).json({
     error: 'Endpoint not found',
