@@ -3,7 +3,7 @@ import db from './utils/db';
 import { setInterval } from 'timers';
 import nodemailer from 'nodemailer';
 
-export async function auto_mail_bidder(req: Request, res: Response) {
+export async function auto_mail_bidder() {
   console.log('auto mail');
   const rawquery = `SELECT U.email,B.id,P.name,B.currentPrice FROM auction.biddedproduct B, auction.user U, auction.product P 
   where B.topBidderId = U.id and B.statusCode = 200 and P.id=B.id;`;
@@ -55,7 +55,7 @@ export async function auto_mail_bidder(req: Request, res: Response) {
     }
   }
 }
-export async function auto_mail_seller_sold(req: Request, res: Response) {
+export async function auto_mail_seller_sold() {
   const rawquery = `SELECT U.email,P.id,P.name,B.currentPrice 
   FROM auction.biddedproduct B, auction.user U, auction.product P 
   where  B.statusCode = 200 and P.id=B.id and P.sellerId = U.id and B.auctionLogCount !=0;`;
@@ -108,7 +108,7 @@ export async function auto_mail_seller_sold(req: Request, res: Response) {
   }
 }
 
-export async function auto_mail_seller_nothing(req: Request, res: Response) {
+export async function auto_mail_seller_nothing() {
   console.log('auto mail');
   const rawquery = `SELECT U.email,P.name FROM auction.biddedproduct B, auction.user U, auction.product P 
   where  B.statusCode = 200 and P.id=B.id and P.sellerId = U.id;`;

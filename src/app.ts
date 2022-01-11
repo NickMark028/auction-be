@@ -105,10 +105,18 @@ import db from './utils/db';
 //   //   console.log(rows);
 //   // }, 1000);
 // });
-import { auto_mail } from './auto';
+import {
+  auto_mail_bidder,
+  auto_mail_seller_nothing,
+  auto_mail_seller_sold,
+} from './auto';
 import { setInterval } from 'timers';
 // app.get('/mail', auto_mail);
-setInterval(auto_mail, 5000);
+// setInterval(function () {
+//   auto_mail_bidder();
+//   auto_mail_seller_nothing(),
+//   auto_mail_seller_sold()
+// }, 5000);
 
 app.use(function (req, res, next) {
   res.status(404).json({
