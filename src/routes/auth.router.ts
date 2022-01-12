@@ -6,6 +6,9 @@ import { validateBody } from '../middleware';
 import login from '../schema/login.json';
 import refresh from '../schema/rf.json';
 import userModel from '../models/user.model';
+import adminModel from '../models/admin.model';
+import sellerModel from '../models/seller.model';
+import bidderModel from '../models/bidder.model';
 
 const authRouter = express.Router();
 
@@ -39,12 +42,29 @@ authRouter.post(
     await userModel.patch(user.id, {
       rfToken: refreshToken,
     });
-
+var role = null;
+    try {
+      if ((await adminModel.findadmin(user.id)) != null) {
+        role = 'admin';
+      }
+      if ((await sellerModel.findseller(user.id)) != null) {
+        role = 'seller';
+      }
+      if ((await bidderModel.findById(user.id)) != null && role == null) {
+        role = 'bidder';
+      }
+      if (role == null) {
+       role = 'not found'
+      }
+    } catch (error) {
+    console.log(error)
+    }
     delete user.password;
     user.rfToken = refreshToken
     res.json({
       authenticated: true,
       accessToken,
+      user_role:role,
       user_info: user,
     });
   }
