@@ -42,13 +42,30 @@ userRouter.post(
     return res.status(201).send();
   }
 );
+userRouter.post('/check-exist',async function (req: Request, res: Response){
+  const check = await userModel.findByUserName(req.body.username);
+  if(check!=null){
+    return res.status(400).json({
+      status:"username exist"
+    })
+  }
+  const check1 = await userModel.findByEmail(req.body.email);
+  if(check1!=null){
+    return res.status(400).json({
+      status:"email exist"
+    })
 
+  }
+ return res.status(201).json({
+      status:"ok"
+    })
+})
 userRouter.get('/', async function (req: Request, res: Response) {
   try {
     const ret = await userModel.findAll();
     return res.status(201).json(ret);
   } catch (err) {
-    return res.status(401).json(err);
+    return res.status(400).json(err);
   }
 });
 
@@ -59,7 +76,7 @@ userRouter.delete('/', async function (req: Request, res: Response) {
     const ret = await userModel.removeById(req.body.id);
     return res.status(201).json(ret);
   } catch (err) {
-    return res.status(401).json(err);
+    return res.status(400).json(err);
   }
 });
 
@@ -155,7 +172,7 @@ userRouter.post('/role', async function (req: Request, res: Response) {
       role: role,
     });
   } catch (error) {
-    return res.status(401).json({
+    return res.status(400).json({
       status: error,
     });
   }
@@ -165,7 +182,7 @@ userRouter.post('/mail', async function (req: Request, res: Response) {
   const otp = totp.generate(req.body.email);
 
   console.log(otp);
-
+try {
   let transporter = nodemailer.createTransport({
     host: 'in-v3.mailjet.com',
     port: 587,
@@ -188,6 +205,10 @@ userRouter.post('/mail', async function (req: Request, res: Response) {
   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
   return res.status(201).json({ status: 'ok' });
+} catch (error) {
+  return res.status(404).json({ status: error });
+}
+  
 });
 userRouter.post('/verify-otp', async function (req: Request, res: Response) {
   console.log(req.body);
@@ -198,7 +219,7 @@ userRouter.post('/verify-otp', async function (req: Request, res: Response) {
   if (check) {
     return res.status(201).json({ status: check });
   }
-  return res.status(401).json({ status: check });
+  return res.status(400).json({ status: check });
 });
 
 export default userRouter;
