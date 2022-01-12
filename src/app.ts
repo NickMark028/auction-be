@@ -27,9 +27,10 @@ io.on('connection', (socket) => {
   });
 
   //socket.emit('test', 'hello');
-  socket.on('bid', (data) => {
+
+  socket.on(`bid`, (data) => {
     console.log(data);
-    io.sockets.emit('updatebid', data); // thông báo lại cho toàn bộ những socket đang theo dõi
+    io.sockets.emit(`updatebid_${data.id_product}`, data); // thông báo lại cho toàn bộ những socket đang theo dõi
     //luu lai auctionlog
   });
 });
@@ -62,8 +63,8 @@ const app = express();
 // app.set('views', path.join(__dirname, 'views'));
 
 app.use(morgan('dev'));
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({ limit: '50mb',extended: false }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: false }));
 app.use(cookieParser());
 
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -112,6 +113,7 @@ import {
 } from './auto';
 import { setInterval } from 'timers';
 // app.get('/mail', auto_mail);
+//auto gửi mail sau mỗi giấy
 // setInterval(function () {
 //   auto_mail_bidder();
 //   auto_mail_seller_nothing(),
