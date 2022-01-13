@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import auctionRouter from './auction.router';
 import authRouter from './auth.router';
 import bidderRouter from './bidder.router';
+import blockedBidderRouter from './blockedBidder.router';
 import categoryRouter from './category.router';
 import productRouter from './product.router';
 import searchRouter from './search.router';
@@ -16,10 +17,12 @@ rootRouter.get('/', function (req: Request, res: Response, next: NextFunction) {
   res.send('<h1>Hi<h1>');
 });
 
+
 export {
   rootRouter,
   auctionRouter,
   authRouter,
+  blockedBidderRouter,
   bidderRouter,
   categoryRouter,
   productRouter,

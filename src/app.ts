@@ -45,6 +45,7 @@ import cors from 'cors';
 import {
   authRouter,
   bidderRouter,
+  blockedBidderRouter,
   categoryRouter,
   productRouter,
   rootRouter,
@@ -88,6 +89,7 @@ app.use('/api/seller/', sellerRouter);
 app.use('/api/watch-list', auth, watchListRouter);
 app.use('/api/admin/', adminRouter);
 app.use('/api/winner/', winnerRouter);
+app.use('/api/blockedBidder', auth, blockedBidderRouter);
 // error handler
 // app.get('/err', function (req, res) {
 //   throw new Error('Error!');
