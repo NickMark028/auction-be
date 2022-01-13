@@ -16,7 +16,7 @@ sellerRouter.get('/:id', async (req, res) => {
 
 sellerRouter.get('/allproduct/:id', async (req, res) => {
   try {
-    const rawquery = `SELECT * FROM auction.queryproductview where sellerId=${req.params.id}`;
+    const rawquery = `SELECT * FROM queryproductview where sellerId=${req.params.id}`;
     const [rows, fields] = await db.raw(rawquery);
     res.send(rows).status(201);
   } catch (err) {
@@ -26,7 +26,7 @@ sellerRouter.get('/allproduct/:id', async (req, res) => {
 
 sellerRouter.get('/product-selling/:id', async (req, res) => {
   try {
-    const rawquery = `SELECT * FROM auction.queryproductview where sellerId=${req.params.id} and timeExpired > (select now())`;
+    const rawquery = `SELECT * FROM queryproductview where sellerId=${req.params.id} and timeExpired > (select now())`;
     const [rows, fields] = await db.raw(rawquery);
     res.send(rows).status(201);
   } catch (err) {
@@ -36,7 +36,7 @@ sellerRouter.get('/product-selling/:id', async (req, res) => {
 
 sellerRouter.get('/checkrole/:id', async (req, res) => {
   try {
-    const rawquery = `SELECT * FROM auction.seller where id=${req.params.id} and active = 1`;
+    const rawquery = `SELECT * FROM seller where id=${req.params.id} and active = 1`;
     const [rows, fields] = await db.raw(rawquery);
     res.send(rows[0]).status(201);
   } catch (err) {
