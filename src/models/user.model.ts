@@ -11,6 +11,14 @@ async function findByUserName(username: string) {
 
   return rows[0];
 }
+async function findByEmail(email: string) {
+  const rows = await db('user').where('email', email);
+  if (rows.length === 0) {
+    return null;
+  }
+
+  return rows[0];
+}
 
 async function isValidRefreshToken(userId: any, refreshToken: any) {
   const rows = await db('user')
@@ -24,6 +32,7 @@ const userModel = {
   ...userDefaultModel,
   findByUserName,
   isValidRefreshToken,
+  findByEmail,
 };
 
 export default userModel;
