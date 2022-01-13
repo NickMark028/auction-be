@@ -7,7 +7,7 @@ const adminSecondmodel = generate('admin', 'id');
 //danh sách nâng cấp tài khoản
 adminRouter.get('/change-role-view', async (req, res) => {
   const rawquery = `
-    select * from changerolelog where statusCode = 100
+  select C.*,U.email,U.firstName,U.lastName from auction.changerolelog C,auction.user U where statusCode = 100 and C.bidderId=U.id
     `;
   const rows = await db.raw(rawquery);
 
