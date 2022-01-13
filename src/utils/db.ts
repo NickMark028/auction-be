@@ -8,6 +8,9 @@ const db = knex({
     user: process.env.DATABASE_USER!,
     password: process.env.DATABASE_PASS!,
     database: process.env.DATABASE_NAME!,
+    ssl : {
+      rejectUnauthorized: false
+    }
   },
   pool: {
     min: 0,
