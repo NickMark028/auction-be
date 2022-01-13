@@ -40,6 +40,19 @@ async function addCategory(id:any,id_cate:any) {
   const rows = await db('productcategory').insert({productId:id,categoryId:id_cate});
   return rows
 }
+
+async function deleteimage(id:any) {
+  const rows = await db('productimage').where({productId:id}).del();
+  return rows
+}
+async function deleteBidded(id:any) {
+  const rows = await db('biddedproduct').where({id:id}).del();
+}
+async function deleteCategory(id:any) {
+  const rows = await db('productcategory').where({productId:id}).del();
+  return rows
+}
+
 async function updateDescription(id:any,des:any){
   const rows:any = await db('product').select('description').where('id',id)
   const rows1 = await db('product').where('id',id).update('description',rows[0].description+des)
@@ -53,7 +66,10 @@ const productModel = {
   addimage,
   addBidded,
   addCategory,
-  updateDescription
+  updateDescription,
+  deleteBidded,
+  deleteCategory,
+  deleteimage
 };
 
 export default productModel;

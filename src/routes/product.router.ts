@@ -14,8 +14,7 @@ cloudinary.config({
   process.env.IC_SECRET
 });
 productRouter.post( '/', async function (req: Request, res: Response) {
-    let product = req.body.product;
-  
+    let product = req.body;
 
  //   return res.status(201).json({status:"ok"})
    // console.log(req.body.product.coverImageUrl)
@@ -77,9 +76,9 @@ productRouter.post( '/', async function (req: Request, res: Response) {
       temp.forEach(async(element: any) => {
        await productModel.addimage(product.id,element)
       });
-      return res.status(200).json(product);
+      return res.status(200).json({status:"add success"});
     } catch (err) {
-      return res.status(401).json({ error: err });
+      return res.status(400).json({ error: err });
     }
 
   }
@@ -141,7 +140,7 @@ productRouter.get('/:id', async (req, res) => {
     const product = await productModel.detailProduct(req.params.id);
     res.send(product).status(201);
   } catch (err) {
-    return res.status(401).json({ error: err });
+    return res.status(400).json({ error: err });
   }
 });
 
@@ -151,7 +150,7 @@ productRouter.get('/detailproduct/:id', async (req, res) => {
     res.send(product).status(201);
   } catch (err) {
     console.log(err)
-    return res.status(401).json({ error: err });
+    return res.status(400).json({ error: err });
   }
 });
 
@@ -161,7 +160,7 @@ productRouter.get('/related/:section', async (req, res) => {
     const pdrelated = await productModel.pb_related(req.params.section);
     res.send(pdrelated).status(201);
   } catch (error) {
-    res.send(error).status(401);
+    res.send(error).status(400);
   }
 });
 productRouter.get('/topbidder/:id', async (req, res) => {
@@ -184,18 +183,22 @@ productRouter.get('/', async (req, res) => {
     const product = await productModel.findAll();
     res.send(product).status(201);
   } catch (err) {
-    return res.status(401).json({ error: err });
+    return res.status(400).json({ error: err });
   }
 });
 
 productRouter.delete('/',async (req, res) => {
   try {
-  await  productModel.removeById(req.body.id)
+    await  productModel.deleteBidded(req.body.id)
+    await  productModel.deleteCategory(req.body.id)
+    await  productModel.deleteimage(req.body.id)
+    await  productModel.removeById(req.body.id)
+
     return res.status(200).json({
       status:"delete success"
     })
   } catch (error) {
-    return res.status(401).json({
+    return res.status(400).json({
       status:error
   })
 }})
