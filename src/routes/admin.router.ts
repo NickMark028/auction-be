@@ -7,7 +7,7 @@ const adminSecondmodel = generate('admin', 'id');
 //danh sách nâng cấp tài khoản
 adminRouter.get('/change-role-view', async (req, res) => {
   const rawquery = `
-  select C.*,U.email,U.firstName,U.lastName from auction.changerolelog C,auction.user U where statusCode = 100 and C.bidderId=U.id
+  select C.*,U.email,U.firstName,U.lastName from changerolelog C,user U where statusCode = 100 and C.bidderId=U.id
     `;
   const rows = await db.raw(rawquery);
 
@@ -18,7 +18,7 @@ adminRouter.get('/change-role-view', async (req, res) => {
 adminRouter.patch('/acceptRole/:id', async (req, res) => {
   try {
     const rawquery = `
-    update auction.changerolelog set statusCode= 200 where bidderId = ${req.params.id}
+    update changerolelog set statusCode= 200 where bidderId = ${req.params.id}
     `;
     await db.raw(rawquery);
 
@@ -33,7 +33,7 @@ adminRouter.patch('/acceptRole/:id', async (req, res) => {
 adminRouter.patch('/delineRole/:id', async (req, res) => {
   try {
     const rawquery = `
-    update auction.changerolelog set statusCode= 201 where bidderId = ${req.params.id}
+    update changerolelog set statusCode= 201 where bidderId = ${req.params.id}
     `;
     await db.raw(rawquery);
 
@@ -48,7 +48,7 @@ adminRouter.patch('/delineRole/:id', async (req, res) => {
 adminRouter.patch('/downgradeRole/:id', async (req, res) => {
   try {
     const rawquery = `
-    update auction.changerolelog set statusCode= 400 where bidderId = ${req.params.id}
+    update changerolelog set statusCode= 400 where bidderId = ${req.params.id}
     `;
     await db.raw(rawquery);
 

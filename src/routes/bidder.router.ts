@@ -18,11 +18,11 @@ bidderRouter.get('/product-bidded/:id', async (req, res) => {
   try {
     const rawquery = `
     select k1.price,k1.productId,k3.*
-    from (SELECT BV.* FROM auction.bidhistoryview BV where BV.bidderId = ${req.params.id} ) k1
+    from (SELECT BV.* FROM bidhistoryview BV where BV.bidderId = ${req.params.id} ) k1
     join
-    (select max(price) as price from  auction.bidhistoryview B group by B.productId) k2
+    (select max(price) as price from  bidhistoryview B group by B.productId) k2
     on k1.price = k2.price
-    join (select V.* from auction.queryproductview V,auction.bidhistoryview BV2 where V.id = BV2.productId  ) k3
+    join (select V.* from queryproductview V,bidhistoryview BV2 where V.id = BV2.productId  ) k3
     on k1.productid=k3.Id
     group by Id`;
     const [rows, fields] = await db.raw(rawquery);
@@ -45,7 +45,7 @@ bidderRouter.post('/changeRole/:id', async (req, res) => {
 bidderRouter.patch('/cancelRole/:id', async (req, res) => {
   try {
     const rawquery = `
-    update auction.changerolelog set statusCode= 300 where bidderId = ${req.params.id}
+    update changerolelog set statusCode= 300 where bidderId = ${req.params.id}
     `;
     await db.raw(rawquery);
     res.status(201).send('cancel successfull!');
