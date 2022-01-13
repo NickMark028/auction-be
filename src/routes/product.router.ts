@@ -81,7 +81,7 @@ productRouter.post('/', async function (req: Request, res: Response) {
     });
     return res.status(200).json({ status: 'add success' });
   } catch (err) {
-    return res.status(400).json({ error: err });
+    return res.status(400).json({status:"server error", error: err });
   }
 });
 

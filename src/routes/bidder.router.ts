@@ -53,4 +53,25 @@ bidderRouter.patch('/cancelRole/:id', async (req, res) => {
     res.send(error).status(401);
   }
 });
+
+bidderRouter.get('/score/:id',async (req, res) => {
+try {
+  const score =await bidderModel.detailBidder(req.params.id)
+  if(score==""){
+    return res.status(404).json({
+      status:" not found",
+    })
+  }
+  return res.status(200).json({
+    score:score.positiveCount-score.negativeCount
+  })
+} catch (error) {
+  return res.status(500).json({
+    status:"server error",
+    error:error
+  })
+}
+
+
+})
 export default bidderRouter;
