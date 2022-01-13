@@ -24,8 +24,8 @@ adminRouter.patch('/acceptRole/:id', async (req, res) => {
 
     res.status(200).send('accept successful!');
   } catch (error) {
-    return res.status(201).json({
-      error,
+    res.status(500).json({
+      error: 'Server error',
     });
   }
 });
@@ -39,8 +39,8 @@ adminRouter.patch('/delineRole/:id', async (req, res) => {
 
     res.status(200).send('deline bidder successful!');
   } catch (error) {
-    return res.status(201).json({
-      error,
+    res.status(500).json({
+      error: 'Server error',
     });
   }
 });
@@ -54,28 +54,27 @@ adminRouter.patch('/downgradeRole/:id', async (req, res) => {
 
     res.status(200).send('dơngrade bidder successful!');
   } catch (error) {
-    return res.status(201).json({
+    res.status(500).json({
+      error: 'Server error',
+    });
+  }
+});
+adminRouter.post('/check-role', async (req, res) => {
+  try {
+    const check = await adminSecondmodel.findById(req.body.id);
+    if (check != null) {
+      return res.status(201).json({
+        role: 'admin',
+      });
+    }
+    return res.status(404).json({
+      role: 'not admin',
+    });
+  } catch (error) {
+    return res.status(404).json({
       error,
     });
   }
 });
- adminRouter.post('/check-role',async (req, res) =>{
-try {
-  const check = await adminSecondmodel.findById(req.body.id)
-  if(check!=null){
-    return res.status(201).json({
-      role:"admin"
-    })
-  }
-  return res.status(404).json({
-    role:"not admin"
-  })
-} catch (error) {
-  return res.status(404).json({
-    error
-  })
-}
-  
- })
 
 export default adminRouter;
