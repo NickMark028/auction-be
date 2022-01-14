@@ -12,7 +12,6 @@ categoryRouter.get('/', async (req: Request, res: Response) => {
                 'path', C.\`path\`)
               ) AS categories
       FROM		Category C
-      WHERE C.isDeleted = 0
       GROUP BY	C.section;
     `;
     const [rows, fields] = await db.raw(queryString);
