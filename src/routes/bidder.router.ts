@@ -86,5 +86,13 @@ bidderRouter.post('/request-bid', async (req, res) => {
   }
 });
 //check đã được seller chấp nhận chưa
-
+bidderRouter.get('/accept-bid/:productId/:id', async (req, res) => {
+  try {
+    const rawquery = `select A.status from acceptbidder A where productId = ${req.params.productId} and bidderId = ${req.params.id}`;
+    const [rows, feild] = await db.raw(rawquery);
+    res.send(rows[0]).status(201);
+  } catch (error) {
+    res.send('fail').status(400);
+  }
+});
 export default bidderRouter;

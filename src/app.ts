@@ -31,13 +31,17 @@ io.on('connection', (socket) => {
   socket.on(`bid`, (data) => {
     console.log(data);
     io.sockets.emit(`updatebid_${data.id_product}`, data); // thông báo lại cho toàn bộ những socket đang theo dõi
-    //luu lai auctionlog
   });
 
   socket.on('request-bid', (data) => {
     console.log(data);
     //thông báo lại cho seller
     io.sockets.emit(`request-from-bidder`, data);
+  });
+
+  socket.on('accepted', (data) => {
+    console.log(data);
+    io.sockets.emit(`updatebtn_${data.Id}`, data);
   });
 });
 
