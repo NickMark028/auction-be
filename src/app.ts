@@ -33,6 +33,12 @@ io.on('connection', (socket) => {
     io.sockets.emit(`updatebid_${data.id_product}`, data); // thông báo lại cho toàn bộ những socket đang theo dõi
     //luu lai auctionlog
   });
+
+  socket.on('request-bid', (data) => {
+    console.log(data);
+    //thông báo lại cho seller
+    io.sockets.emit(`request-from-bidder`, data);
+  });
 });
 
 httpServer.listen(40567);
@@ -95,17 +101,7 @@ app.use('/api/winner/', winnerRouter);
 // });
 
 import db from './utils/db';
-// console.log('mail');
-// app.use((req, res, next) => {
-//   // const rawquery = `SEECT U.email,B.name, B.currentPrice,b.topbidder,B.topbidderId FROM auction.queryproductdetailview B, user U where B.topBidderId = U.id and B.timeExpired < (select now())`;
-//   console.log('auto mail');
-//   // setInterval(async () => {
-//   //   const rawquery = `SELECT B.*
-//   //   FROM auction.queryproductdetailview B where B.timeExpired > (select now())`;
-//   //   const [rows, fields] = await db.raw(rawquery);
-//   //   console.log(rows);
-//   // }, 1000);
-// });
+
 import {
   auto_mail_bidder,
   auto_mail_seller_nothing,
