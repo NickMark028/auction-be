@@ -71,7 +71,7 @@ productRouter.post('/', async function (req: Request, res: Response) {
       ...product,
     };
 
-    await productModel.addBidded(product.id);
+    await productModel.addBidded(product.id,product.reservedPrice);
 
     category.forEach(async (element: any) => {
       await productModel.addCategory(product.id, element.id);

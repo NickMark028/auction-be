@@ -15,6 +15,7 @@ auctionRouter.post('/', async (req, res) => {
 
     res.status(201).json(auction);
   } catch (error) {
+    console.log(error)
     res.status(400).send(error);
   }
 });

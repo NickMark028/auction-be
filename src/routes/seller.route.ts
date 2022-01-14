@@ -4,7 +4,14 @@ import sellerSchema from '../schema/seller.json';
 import db from '../utils/db';
 
 const sellerRouter = express.Router();
-
+sellerRouter.get('/',async (req, res) => {
+  try {
+    const seller = await sellerModel.findAll();
+    res.send(seller).status(201);
+  } catch (err) {
+    return res.status(400).json({ error: err });
+  }
+})
 sellerRouter.get('/:id', async (req, res) => {
   try {
     const seller = await sellerModel.findById(req.params.id);

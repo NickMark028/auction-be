@@ -33,8 +33,8 @@ async function addimage(id:any,url:any) {
   const rows = await db('productimage').insert({productId:id,url:url});
   return rows
 }
-async function addBidded(id:any) {
-  const rows = await db('biddedproduct').insert({id:id});
+async function addBidded(id:any,cur:any) {
+  const rows = await db('biddedproduct').insert({id:id,currentPrice:cur});
 }
 async function addCategory(id:any,id_cate:any) {
   const rows = await db('productcategory').insert({productId:id,categoryId:id_cate});
