@@ -44,7 +44,7 @@ productRouter.post('/', async function (req: Request, res: Response) {
     );
     const temp: any = [];
     var i = 0;
-    for (const element of product.productImage) {
+ for (const element of product.productImage) {
       await cloudinary.v2.uploader.upload(
         element,
         {
@@ -71,7 +71,7 @@ productRouter.post('/', async function (req: Request, res: Response) {
       ...product,
     };
 
-    await productModel.addBidded(product.id, product.reservedPrice);
+    await productModel.addBidded(product.id);
 
     category.forEach(async (element: any) => {
       await productModel.addCategory(product.id, element.id);
@@ -181,7 +181,7 @@ productRouter.get('/topbidder/:id', async (req, res) => {
 
 productRouter.get('/', async (req, res) => {
   try {
-    const product = await productModel.findAll();
+    const product = await productModel.getproduct();
     res.send(product).status(201);
   } catch (err) {
     return res.status(400).json({ error: err });
@@ -190,17 +190,14 @@ productRouter.get('/', async (req, res) => {
 
 productRouter.delete('/', async (req, res) => {
   try {
-    await productModel.deleteBidded(req.body.id);
-    await productModel.deleteCategory(req.body.id);
-    await productModel.deleteimage(req.body.id);
-    await productModel.removeById(req.body.id);
+    await productModel.deleteProduct(req.body.id);
 
     return res.status(200).json({
       status: 'delete success',
     });
   } catch (error) {
     return res.status(400).json({
-      status: error,
+      status: 'server error'
     });
   }
 });

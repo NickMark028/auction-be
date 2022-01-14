@@ -54,7 +54,6 @@ userRouter.post('/check-exist',async function (req: Request, res: Response){
     return res.status(400).json({
       status:"email exist"
     })
-
   }
  return res.status(201).json({
       status:"ok"

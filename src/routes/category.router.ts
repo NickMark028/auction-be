@@ -12,6 +12,7 @@ categoryRouter.get('/', async (req: Request, res: Response) => {
                 'path', C.\`path\`)
               ) AS categories
       FROM		Category C
+      WHERE C.isDeleted = 0
       GROUP BY	C.section;
     `;
     const [rows, fields] = await db.raw(queryString);
@@ -49,9 +50,9 @@ categoryRouter.delete('/', async function (req: Request, res: Response) {
       .select();
     console.log(result);
     if (result.length === 0) {
-      const list = await db('category').where('id', req.body.id).del();
+      const list = await db('category').where('id', req.body.id).update('isDeleted',1);
       // console.log(list)
-      return res.status(201).json({
+      return res.status(200).json({
         status: 'deleted',
       });
     }
@@ -60,7 +61,7 @@ categoryRouter.delete('/', async function (req: Request, res: Response) {
     });
   } catch (error) {
     res.status(500).json({
-      error: 'Server error',
+      status: 'Server error',
     });
   }
 });
