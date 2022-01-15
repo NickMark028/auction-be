@@ -54,24 +54,45 @@ bidderRouter.patch('/cancelRole/:id', async (req, res) => {
   }
 });
 
-bidderRouter.get('/score/:id',async (req, res) => {
-try {
-  const score =await bidderModel.detailBidder(req.params.id)
-  if(score==""){
-    return res.status(404).json({
-      status:" not found",
-    })
+bidderRouter.get('/score/:id', async (req, res) => {
+  try {
+    const score = await bidderModel.detailBidder(req.params.id);
+    if (score == '') {
+      return res.status(404).json({
+        status: ' not found',
+      });
+    }
+    return res.status(200).json({
+      score: score.positiveCount - score.negativeCount,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 'server error',
+      error: error,
+    });
   }
-  return res.status(200).json({
-    score:score.positiveCount-score.negativeCount
-  })
-} catch (error) {
-  return res.status(500).json({
-    status:"server error",
-    error:error
-  })
-}
+});
 
-
-})
+//xin được đấu giá nếu score == 0
+bidderRouter.post('/request-bid', async (req, res) => {
+  try {
+    const request = await db('acceptbidder').insert({
+      productId: req.body.productId,
+      bidderId: req.body.bidderId,
+    });
+    res.status(201).send('request successfull!');
+  } catch (error) {
+    res.send(error).status(400);
+  }
+});
+//check đã được seller chấp nhận chưa
+bidderRouter.get('/accept-bid/:productId/:id', async (req, res) => {
+  try {
+    const rawquery = `select A.status from acceptbidder A where productId = ${req.params.productId} and bidderId = ${req.params.id}`;
+    const [rows, feild] = await db.raw(rawquery);
+    res.send(rows[0]).status(201);
+  } catch (error) {
+    res.send('fail').status(400);
+  }
+});
 export default bidderRouter;
