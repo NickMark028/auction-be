@@ -73,6 +73,15 @@ productRouter.post('/', async function (req: Request, res: Response) {
 
     await productModel.addBidded(product.id,product.reservedPrice);
 
+    const rawquery= ` CREATE EVENT ScheduleTimeOutForProduct${product.id}
+    ON SCHEDULE AT '${product.timeExpired}'
+    DO
+      UPDATE  BiddedProduct
+      SET     statusCode = 200
+      WHERE   id = ${product.id};
+      `
+    await db.raw(rawquery) 
+
     category.forEach(async (element: any) => {
       await productModel.addCategory(product.id, element.id);
     });
@@ -81,6 +90,7 @@ productRouter.post('/', async function (req: Request, res: Response) {
     });
     return res.status(200).json({ status: 'add success' });
   } catch (err) {
+    console.log(err)
     return res.status(400).json({status:"server error", error: err });
   }
 });
