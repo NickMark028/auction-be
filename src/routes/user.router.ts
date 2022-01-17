@@ -69,7 +69,7 @@ userRouter.get('/', async function (req: Request, res: Response) {
 });
 
 userRouter.delete('/', async function (req: Request, res: Response) {
-  console.log(req.body.id);
+  
 
   try {
     const ret = await userModel.removeById(req.body.id);
@@ -81,7 +81,7 @@ userRouter.delete('/', async function (req: Request, res: Response) {
 
 userRouter.get('/profile', async function (req: Request, res: Response) {
   try {
-    console.log(req.query);
+   
     const id: any = req.query.id;
     var ret = await userModel.findById(id);
     delete ret.password;
@@ -92,7 +92,7 @@ userRouter.get('/profile', async function (req: Request, res: Response) {
       (date.getMonth() + 1).toString() +
       '-' +
       date.getDate().toString();
-    console.log(date1);
+
     return res.status(201).json({
       username: ret.username,
       firstName: ret.firstName,
@@ -108,7 +108,7 @@ userRouter.get('/profile', async function (req: Request, res: Response) {
 
 userRouter.patch('/profile', async function (req: Request, res: Response) {
   try {
-    console.log(req.body);
+   
 
     await userModel.patch(req.body.id, {
       firstName: req.body.firstName,
@@ -129,7 +129,7 @@ userRouter.patch('/profile', async function (req: Request, res: Response) {
 
 userRouter.patch('/reset-password',async function (req: Request, res: Response) {
     try {
-      console.log(req.body);
+
       const ret = await userModel.findById(req.body.id);
       if (!bcrypt.compareSync(req.body.current_pass, ret.password)) {
         return res.status(404).json({
@@ -195,11 +195,11 @@ try {
     subject: 'Email from auction please do not reply', // Subject line
     text: 'Hello world from tu with love your otp is:' + otp, // plain text body
   });
-  console.log('Message sent: %s', info.messageId);
+
   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
   // Preview only available when sending through an Ethereal account
-  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+ 
 
   return res.status(201).json({ status: 'ok' });
 } catch (error) {
@@ -208,9 +208,9 @@ try {
   
 });
 userRouter.post('/verify-otp', async function (req: Request, res: Response) {
-  console.log(req.body);
+
   const check = totp.check(req.body.otp, req.body.email);
-  console.log(check);
+ 
   //console.log(totp.verify({token:req.body.otp,secret:req.body.email}))
   // console.log(hotp.timeRemaining())
   if (check) {

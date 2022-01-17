@@ -48,7 +48,7 @@ export async function auto_mail_bidder() {
           product[i].price, // plain text body
       });
       //API đánh dấu đã gửi
-      const newquery = `update biddedproduct set statusCode = 210 where id=${product[i].id}`;
+      const newquery = `update biddedproduct set statusCode = 201 where id=${product[i].id}`;
       await db.raw(newquery);
       console.log('Message sent: %s', info.messageId);
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
@@ -58,7 +58,7 @@ export async function auto_mail_bidder() {
 export async function auto_mail_seller_sold() {
   const rawquery = `SELECT U.email,P.id,P.name,B.currentPrice 
   FROM biddedproduct B, user U, product P 
-  where  B.statusCode = 200 and P.id=B.id and P.sellerId = U.id and B.auctionLogCount !=0;`;
+  where  B.statusCode = 201 and P.id=B.id and P.sellerId = U.id and B.auctionLogCount !=0;`;
   const [rows, fields] = await db.raw(rawquery);
 
   // res.send(rows);
@@ -100,7 +100,7 @@ export async function auto_mail_seller_sold() {
           product[i].price, // plain text body
       });
       //API đánh dấu đã gửi
-      const newquery = `update biddedproduct set statusCode = 210 where id=${product[i].id}`;
+      const newquery = `update biddedproduct set statusCode = 202 where id=${product[i].id}`;
       await db.raw(newquery);
       console.log('Message sent: %s', info.messageId);
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
@@ -149,7 +149,7 @@ export async function auto_mail_seller_nothing() {
           ' and the time is EXPIRED!!',
       });
       //API đánh dấu đã gửi
-      const newquery = `update biddedproduct set statusCode = 210 where id=${product[i].id}`;
+      const newquery = `update biddedproduct set statusCode = 202 where id=${product[i].id}`;
       await db.raw(newquery);
       console.log('Message sent: %s', info.messageId);
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
