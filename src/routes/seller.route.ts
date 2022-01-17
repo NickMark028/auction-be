@@ -1,10 +1,13 @@
 import express, { query, Request, Response } from 'express';
+import { auth } from '../middleware';
+import isSeller from '../middleware/isSeller.mdw';
 import sellerModel from '../models/seller.model';
 import sellerSchema from '../schema/seller.json';
+import { TRequest } from '../types';
 import db from '../utils/db';
 
 const sellerRouter = express.Router();
-sellerRouter.get('/',async (req, res) => {
+sellerRouter.get('/', async (req, res) => {
   try {
     const seller = await sellerModel.findAll();
     res.send(seller).status(201);
@@ -72,5 +75,20 @@ sellerRouter.patch('/accept-bid', async (req, res) => {
     return res.status(401).json({ error: err });
   }
 });
+
+sellerRouter.get('/:userId/:productId', async (req, res, next) => {
+  try {
+    const bidderId = parseInt(req.params['userId']);
+    const productId = parseInt(req.params['productId']);
+    const isSellerOfProduct = await sellerModel.isSellerOfProduct(productId, bidderId);
+    res.json({
+      isSellerOfProduct
+    })
+  } catch (error) {
+    res.status(500).json({
+      errorMsg: 'Server internal message'
+    });
+  }
+})
 
 export default sellerRouter;

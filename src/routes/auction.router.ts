@@ -15,8 +15,11 @@ auctionRouter.post('/', async (req, res) => {
 
     res.status(201).json(auction);
   } catch (error) {
+    // if (error.msg == 'The price must be a minimum of the product reserved price')
+    //   res.status(400).send('The price must be a minimum of the product reserved price');
+    // else
+    res.status(500).send('Server internal error');
     console.log(error)
-    res.status(400).send(error);
   }
 });
 

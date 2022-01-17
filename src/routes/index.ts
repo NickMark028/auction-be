@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import auctionRouter from './auction.router';
 import authRouter from './auth.router';
 import bidderRouter from './bidder.router';
+import currentBidderRouter from './currentBidder.route';
 import categoryRouter from './category.router';
 import productRouter from './product.router';
 import searchRouter from './search.router';
@@ -21,6 +22,7 @@ export {
   auctionRouter,
   authRouter,
   bidderRouter,
+  currentBidderRouter,
   categoryRouter,
   productRouter,
   searchRouter,

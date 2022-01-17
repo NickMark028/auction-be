@@ -12,7 +12,7 @@ export default function auth(req: TRequest, res: Response, next: NextFunction) {
         'SECRET_KEY'
       );
       req.accessTokenPayload = decoded as TJWTPayload;
-      
+
       next();
     } catch (err) {
       if (process.env.NODE_ENV === 'develop') console.log(err);
@@ -21,7 +21,8 @@ export default function auth(req: TRequest, res: Response, next: NextFunction) {
         message: 'Invalid access token.',
       });
     }
-  } else {
+  }
+  else {
     return res.status(401).json({
       message: 'Access token not found.',
     });

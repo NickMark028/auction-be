@@ -9,7 +9,6 @@ import auctionRouter from './routes/auction.router';
 // import httpServer from './socket';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { clearScreenDown } from 'readline';
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
@@ -49,7 +48,7 @@ httpServer.listen(40567);
 
 // ---------------------------------------------------------------------- //
 // Express
-import express, { NextFunction, Response, ErrorRequestHandler } from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -67,11 +66,13 @@ import {
 import adminRouter from './routes/admin.router';
 import winnerRouter from './routes/winner.router';
 import { auth } from './middleware';
+import currentBidderRouter from './routes/currentBidder.route';
 const app = express();
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: false }));
@@ -79,7 +80,6 @@ app.use(cookieParser());
 
 // app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors());
 // app.use(
 //   cors({
 //     origin: 'http://localhost:3001',
@@ -88,30 +88,25 @@ app.use(cors());
 // );
 
 app.use('/', rootRouter);
-app.use('/api/auction/', auctionRouter);
-app.use('/api/auth/', authRouter);
-app.use('/api/bidder/', bidderRouter);
+app.use('/api/auction', auctionRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/bidder', bidderRouter);
 app.use('/api/category', categoryRouter);
 app.use('/api/product', productRouter);
-app.use('/api/user/', userRouter);
+app.use('/api/user', userRouter);
 app.use('/api/search', searchRouter);
-app.use('/api/seller/', sellerRouter);
+app.use('/api/seller', sellerRouter);
 app.use('/api/watch-list', auth, watchListRouter);
-app.use('/api/admin/', adminRouter);
-app.use('/api/winner/', winnerRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/winner', winnerRouter);
+app.use('/api/current-bidder', currentBidderRouter);
+// app.use('/api/blocked-bidder/', blockedBidderRouter);
+
 // error handler
 // app.get('/err', function (req, res) {
 //   throw new Error('Error!');
 // });
 
-import db from './utils/db';
-
-import {
-  auto_mail_bidder,
-  auto_mail_seller_nothing,
-  auto_mail_seller_sold,
-} from './auto';
-import { setInterval } from 'timers';
 // app.get('/mail', auto_mail);
 //auto gửi mail sau mỗi giấy
 // setInterval(function () {

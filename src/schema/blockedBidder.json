@@ -1,0 +1,16 @@
+{
+    "type": "object",
+    "properties": {
+        "bidderId": {
+            "type": "number"
+        },
+        "productId": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "bidderId",
+        "productId"
+    ],
+    "additionalProperties": false
+}
