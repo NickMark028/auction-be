@@ -55,6 +55,7 @@ import cors from 'cors';
 import {
   authRouter,
   bidderRouter,
+  blockedBidderRouter,
   categoryRouter,
   productRouter,
   rootRouter,

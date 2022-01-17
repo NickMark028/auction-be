@@ -62,7 +62,7 @@ userRouter.post('/check-exist',async function (req: Request, res: Response){
 userRouter.get('/', async function (req: Request, res: Response) {
   try {
     const ret = await userModel.findAll();
-    return res.status(201).json(ret);
+    return res.status(201).json(ret.filter(user => user.id > 1000000));
   } catch (err) {
     return res.status(400).json(err);
   }

@@ -17,6 +17,7 @@ rootRouter.get('/', function (req: Request, res: Response, next: NextFunction) {
   res.send('<h1>Hi<h1>');
 });
 
+
 export {
   rootRouter,
   auctionRouter,
