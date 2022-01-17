@@ -47,7 +47,7 @@ categoryRouter.delete('/', async function (req: Request, res: Response) {
     const result = await db('QueryProductView')
       .where({ categoryPath: path })
       .select();
-    console.log(result);
+
     if (result.length === 0) {
       const list = await db('category').where('id', req.body.id).update('isDeleted',1);
       // console.log(list)
