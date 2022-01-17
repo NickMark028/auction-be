@@ -9,7 +9,7 @@ import searchRouter from './search.router';
 import sellerRouter from './seller.route';
 import userRouter from './user.router';
 import watchListRouter from './watchList.router';
-
+import blockedBidderRouter from './blockedBidder.router';
 const rootRouter = express.Router();
 
 /* GET home page. */
@@ -30,4 +30,5 @@ export {
   sellerRouter,
   userRouter,
   watchListRouter,
+  blockedBidderRouter
 };
