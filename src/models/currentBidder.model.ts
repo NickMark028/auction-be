@@ -1,4 +1,4 @@
-import { TReqBlockedBidder } from "../types/request";
+import { TCurrentBidder } from "../types/request";
 import db from "../utils/db";
 
 const currentBidderModel = {
@@ -13,7 +13,7 @@ const currentBidderModel = {
         const [rows, fields] = await db.raw(rawQuery, [productId])
         return rows as any[];
     },
-    blockBidder(obj: TReqBlockedBidder) {
+    blockBidder(obj: TCurrentBidder) {
         return db('CurrentBidder').where(obj).update({
             isBlocked: true
         });

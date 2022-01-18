@@ -46,7 +46,7 @@ productRouter.post('/', async function (req: Request, res: Response) {
     );
     const temp: any = [];
     var i = 0;
- for (const element of product.productImage) {
+    for (const element of product.productImage) {
       await cloudinary.v2.uploader.upload(
         element,
         {
@@ -73,16 +73,16 @@ productRouter.post('/', async function (req: Request, res: Response) {
       ...product,
     };
 
-    await productModel.addBidded(product.id,product.reservedPrice);
+    await productModel.addBidded(product.id, product.reservedPrice);
 
-    const rawquery= ` CREATE EVENT ScheduleTimeOutForProduct${product.id}
+    const rawquery = ` CREATE EVENT ScheduleTimeOutForProduct${product.id}
     ON SCHEDULE AT '${product.timeExpired}'
     DO
       UPDATE  BiddedProduct
       SET     statusCode = 200
       WHERE   id = ${product.id};
       `
-    await db.raw(rawquery) 
+    await db.raw(rawquery)
 
     category.forEach(async (element: any) => {
       await productModel.addCategory(product.id, element.id);
@@ -93,13 +93,13 @@ productRouter.post('/', async function (req: Request, res: Response) {
     return res.status(200).json({ status: 'add success' });
   } catch (err) {
     console.log(err)
-    return res.status(400).json({status:"server error", error: err });
+    return res.status(400).json({ status: "server error", error: err });
   }
 });
 
 productRouter.get('/top-near-end', async (req: Request, res: Response) => {
   try {
-    const data = productModel.getNearlyEndProducts(8);
+    const data = await productModel.getNearlyEndProducts(8);
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
@@ -110,7 +110,7 @@ productRouter.get('/top-near-end', async (req: Request, res: Response) => {
 
 productRouter.get('/top-priciest', async (req: Request, res: Response) => {
   try {
-    const data = productModel.getTopPriciestProducts(8);
+    const data = await productModel.getTopPriciestProducts(8);
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
@@ -121,7 +121,7 @@ productRouter.get('/top-priciest', async (req: Request, res: Response) => {
 
 productRouter.get('/top-auction-log', async (req: Request, res: Response) => {
   try {
-    const data = productModel.getProductWithMostAutionLog(8);
+    const data = await productModel.getProductWithMostAutionLog(8);
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({

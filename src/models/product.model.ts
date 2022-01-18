@@ -1,8 +1,62 @@
 import generate from './generic.model';
 import db from '../utils/db';
+import { TProductQuery } from '../types/request';
+import { PageSize } from '../enum';
 
 const productDefaultModel = generate('product', 'id');
 const productImage = generate('productimage', 'id');
+
+async function searchProduct(searchParam: TProductQuery) {
+  const {
+    keyword,
+    category,
+    page = '1',
+    pricing,
+    timeExpired } = searchParam;
+
+  console.log(searchParam);
+
+
+  const pageIndex = parseInt(page) - 1;
+
+  const whereStringTemp =
+    (!keyword && !category)
+      ? '' 
+      : ('WHERE ' + (keyword ? `MATCH(name) AGAINST(? IN BOOLEAN MODE) AND` : '') + (category ? ` categoryPath = ? AND` : ''));
+  const whereString = whereStringTemp.length > 0
+    ? whereStringTemp.substring(0, whereStringTemp.length - ' AND'.length)
+    : '';
+  const orderByStringTemp =
+    (!timeExpired && !pricing)
+      ? ''
+      : ('ORDER BY ' + (timeExpired ? `timeExpired ${timeExpired},` : '') + (pricing ? `CalculateMinPrice(reservedPrice, currentPrice),` : ''));
+  const orderByString = orderByStringTemp.length > 0
+    ? orderByStringTemp.substring(0, orderByStringTemp.length - 1)
+    : '';
+
+  const rawQuerySearch = `
+    SELECT	  *
+    FROM	  	QueryProductView
+    ${whereString}
+    ${orderByString}
+    LIMIT		${pageIndex * PageSize.SEARCH_PRODUCT}, ${PageSize.SEARCH_PRODUCT};
+  `;
+
+  const rawQueryCount = `
+    SELECT	  Count(1) as resultCount
+    FROM	  	QueryProductView
+    ${whereString}
+    ${orderByString};
+  `;
+
+  const params = [keyword, category].filter(e => e != undefined) as string[];
+  const [products, fields] = await db.raw(rawQuerySearch, params);
+  const [[resultCount], _] = await db.raw(rawQueryCount, params);
+  return {
+    products,
+    resultCount
+  };
+}
 
 async function detailProduct(id: any) {
   const rows = await db('queryproductdetailview').where('id', id);
@@ -16,8 +70,8 @@ async function detailProduct(id: any) {
 // Get top products
 async function getTopPriciestProducts(amount: number) {
   const rawQuery = `
-      SELECT		*
-      FROM	  	ProductView PV
+      SELECT		DISTINCT id, PV.*
+      FROM	  	QueryProductView PV
       ORDER BY	IF(PV.currentPrice IS NULL, PV.reservedPrice, PV.currentPrice) DESC
       LIMIT 		?;
     `;
@@ -26,8 +80,8 @@ async function getTopPriciestProducts(amount: number) {
 }
 async function getNearlyEndProducts(amount: number) {
   const rawQuery = `
-      SELECT		*
-      FROM		  ProductView PV
+      SELECT		DISTINCT id, PV.*
+      FROM		  QueryProductView PV
       ORDER BY	TIME_TO_SEC(TIMEDIFF(NOW(), NOW() - INTERVAL 1 MONTH)) ASC
       LIMIT 		?;
     `;
@@ -36,8 +90,8 @@ async function getNearlyEndProducts(amount: number) {
 }
 async function getProductWithMostAutionLog(amount: number) {
   const rawQuery = `
-      SELECT		*
-      FROM	  	ProductView PV
+      SELECT		DISTINCT id, PV.*
+      FROM	  	QueryProductView PV
       ORDER BY	PV.auctionLogCount DESC
       LIMIT 		?;
     `;
@@ -47,7 +101,7 @@ async function getProductWithMostAutionLog(amount: number) {
 
 //get 8 related products
 async function pb_related(Section: any) {
-  const rows = await db('queryproductview')
+  const rows = await db('QueryProductView')
     // .select(
     //   'name',
     //   'currentPrice',
@@ -99,7 +153,8 @@ const productModel = {
   addCategory,
   updateDescription,
   deleteProduct,
-  getproduct
+  getproduct,
+  searchProduct
 };
 
 export default productModel;
