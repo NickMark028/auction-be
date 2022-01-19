@@ -43,8 +43,8 @@ productRouter.post('/', async function (req: Request, res: Response) {
       }
     );
     const temp: any = [];
-    var i = 0;
- for (const element of product.productImage) {
+    let i = 0;
+    for (const element of product.productImage) {
       await cloudinary.v2.uploader.upload(
         element,
         {
@@ -71,16 +71,16 @@ productRouter.post('/', async function (req: Request, res: Response) {
       ...product,
     };
 
-    await productModel.addBidded(product.id,product.reservedPrice);
+    await productModel.addBidded(product.id, product.reservedPrice);
 
-    const rawquery= ` CREATE EVENT ScheduleTimeOutForProduct${product.id}
+    const rawquery = ` CREATE EVENT ScheduleTimeOutForProduct${product.id}
     ON SCHEDULE AT '${product.timeExpired}'
     DO
       UPDATE  BiddedProduct
       SET     statusCode = 200
       WHERE   id = ${product.id};
-      `
-    await db.raw(rawquery) 
+      `;
+    await db.raw(rawquery);
 
     category.forEach(async (element: any) => {
       await productModel.addCategory(product.id, element.id);
@@ -90,8 +90,8 @@ productRouter.post('/', async function (req: Request, res: Response) {
     });
     return res.status(200).json({ status: 'add success' });
   } catch (err) {
-    console.log(err)
-    return res.status(400).json({status:"server error", error: err });
+    console.log(err);
+    return res.status(400).json({ status: 'server error', error: err });
   }
 });
 
@@ -100,6 +100,7 @@ productRouter.get('/top-near-end', async (req: Request, res: Response) => {
     const rawQuery = `
       SELECT		*
       FROM		  ProductView PV
+      where     PV.timeExpired > (select now())   
       ORDER BY	TIME_TO_SEC(TIMEDIFF(NOW(), NOW() - INTERVAL 1 MONTH)) ASC
       LIMIT 		8;
     `;
@@ -117,6 +118,7 @@ productRouter.get('/top-priciest', async (req: Request, res: Response) => {
     const rawQuery = `
       SELECT		*
       FROM	  	ProductView PV
+      where     PV.timeExpired > (select now())   
       ORDER BY	IF(PV.currentPrice IS NULL, PV.reservedPrice, PV.currentPrice) DESC
       LIMIT 		8;
     `;
@@ -134,6 +136,7 @@ productRouter.get('/top-auction-log', async (req: Request, res: Response) => {
     const rawQuery = `
       SELECT		*
       FROM	  	ProductView PV
+      where     PV.timeExpired > (select now())   
       ORDER BY	PV.auctionLogCount DESC
       LIMIT 		8;
     `;
@@ -207,7 +210,7 @@ productRouter.delete('/', async (req, res) => {
     });
   } catch (error) {
     return res.status(400).json({
-      status: 'server error'
+      status: 'server error',
     });
   }
 });
