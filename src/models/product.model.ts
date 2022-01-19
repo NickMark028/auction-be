@@ -51,10 +51,10 @@ async function searchProduct(searchParam: TProductQuery) {
 
   const params = [keyword, category].filter(e => e != undefined) as string[];
   const [products, fields] = await db.raw(rawQuerySearch, params);
-  const [[resultCount], _] = await db.raw(rawQueryCount, params);
+  const [[count], _] = await db.raw(rawQueryCount, params);
   return {
     products,
-    resultCount
+    resultCount: count['resultCount']
   };
 }
 
