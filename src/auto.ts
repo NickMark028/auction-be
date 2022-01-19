@@ -4,7 +4,7 @@ import { setInterval } from 'timers';
 import nodemailer from 'nodemailer';
 
 export async function auto_mail_bidder() {
-  console.log('auto mail');
+ 
   const rawquery = `SELECT U.email,B.id,P.name,B.currentPrice FROM biddedproduct B, user U, product P 
   where B.topBidderId = U.id and B.statusCode = 200 and P.id=B.id;`;
   const [rows, fields] = await db.raw(rawquery);
@@ -19,11 +19,10 @@ export async function auto_mail_bidder() {
       { id: rows[i].id, name: rows[i].name, price: rows[i].currentPrice },
     ];
   }
-  console.log(temp);
-  console.log(product);
+
   // check mail gửi >>>>> đánh dấu đã gửi >> guiwr vào db để lần sau query
   if (rows.length === 0) {
-    console.log('nothing expired!!!');
+  
   } else {
     //gửi mail và đánh dấu
     const transporter = nodemailer.createTransport({
@@ -50,8 +49,7 @@ export async function auto_mail_bidder() {
       //API đánh dấu đã gửi
       const newquery = `update biddedproduct set statusCode = 201 where id=${product[i].id}`;
       await db.raw(newquery);
-      console.log('Message sent: %s', info.messageId);
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  
     }
   }
 }
@@ -71,11 +69,10 @@ export async function auto_mail_seller_sold() {
       { id: rows[i].id, name: rows[i].name, price: rows[i].currentPrice },
     ];
   }
-  // console.log(temp);
-  // console.log(product);
+
   // check mail gửi >>>>> đánh dấu đã gửi >> guiwr vào db để lần sau query
   if (rows.length === 0) {
-    console.log('nothing expired!!!');
+   
   } else {
     //gửi mail và đánh dấu
     const transporter = nodemailer.createTransport({
@@ -102,14 +99,13 @@ export async function auto_mail_seller_sold() {
       //API đánh dấu đã gửi
       const newquery = `update biddedproduct set statusCode = 202 where id=${product[i].id}`;
       await db.raw(newquery);
-      console.log('Message sent: %s', info.messageId);
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
     }
   }
 }
 
 export async function auto_mail_seller_nothing() {
-  console.log('auto mail');
+
   const rawquery = `SELECT U.email,P.name FROM biddedproduct B, user U, product P 
   where  B.statusCode = 200 and P.id=B.id and P.sellerId = U.id;`;
   const [rows, fields] = await db.raw(rawquery);
@@ -121,11 +117,10 @@ export async function auto_mail_seller_nothing() {
     temp = [...temp, rows[i].email];
     product = [...product, { id: rows[i].id, name: rows[i].name }];
   }
-  console.log(temp);
-  console.log(product);
+
   // check mail gửi >>>>> đánh dấu đã gửi >> guiwr vào db để lần sau query
   if (rows.length === 0) {
-    console.log('nothing expired!!!');
+    
   } else {
     //gửi mail và đánh dấu
     const transporter = nodemailer.createTransport({
@@ -151,8 +146,7 @@ export async function auto_mail_seller_nothing() {
       //API đánh dấu đã gửi
       const newquery = `update biddedproduct set statusCode = 202 where id=${product[i].id}`;
       await db.raw(newquery);
-      console.log('Message sent: %s', info.messageId);
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
     }
   }
 }

@@ -40,7 +40,7 @@ searchRouter.get(
 
       res.status(200).json(convertProcedureRowSetToList(rows));
     } catch (error) {
-      console.error(error);
+   
       res.status(500).json({
         message: 'Server error',
       });

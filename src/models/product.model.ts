@@ -48,7 +48,7 @@ async function getproduct() {
 async function updateDescription(id:any,des:any){
   const rows:any = await db('product').select('description').where('id',id)
   const rows1 = await db('product').where('id',id).update('description',rows[0].description+des)
-  console.log(rows)
+
   return rows1
 }
 async function deleteProduct(id:any) {

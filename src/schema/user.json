@@ -16,9 +16,6 @@
     "email": {
       "type": "string"
     },
-    "address": {
-      "type": "string"
-    },
     "dateOfBirth": {
       "type": "string"
     }, 

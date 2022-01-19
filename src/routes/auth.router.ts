@@ -57,7 +57,7 @@ var role = null;
        role = 'not found'
       }
     } catch (error) {
-    console.log(error)
+   
     }
     delete user.password;
     user.rfToken = refreshToken
@@ -99,8 +99,7 @@ authRouter.post(
       });
     }
     catch (err) {
-      // if (process.env.NODE_ENV === 'develop')
-      //   console.log(err);
+      
 
       return res.status(401).json({
         message: 'Invalid access token.',

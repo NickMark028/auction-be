@@ -15,8 +15,7 @@ cloudinary.config({
 productRouter.post('/', async function (req: Request, res: Response) {
   let product = req.body;
 
-  //   return res.status(201).json({status:"ok"})
-  // console.log(req.body.product.coverImageUrl)
+ 
   try {
     const check = await sellerModel.findById(product.sellerId);
     if (check == null) {
@@ -90,7 +89,6 @@ productRouter.post('/', async function (req: Request, res: Response) {
     });
     return res.status(200).json({ status: 'add success' });
   } catch (err) {
-    console.log(err)
     return res.status(400).json({status:"server error", error: err });
   }
 });
@@ -160,7 +158,6 @@ productRouter.get('/detailproduct/:id', async (req, res) => {
     const product = await productModel.detailProduct(req.params.id);
     res.send(product).status(201);
   } catch (err) {
-    console.log(err);
     return res.status(400).json({ error: err });
   }
 });
