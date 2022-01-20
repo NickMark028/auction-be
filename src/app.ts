@@ -116,8 +116,10 @@ app.use('/api/current-bidder', currentBidderRouter);
 // app.get('/mail', auto_mail);
 //auto gửi mail sau mỗi giấy
 setInterval(function () {
+
   auto_mail_bidder();
-  auto_mail_seller_nothing(), auto_mail_seller_sold();
+  auto_mail_seller_sold();
+  auto_mail_seller_nothing();
 }, 10000);
 
 app.use(function (req, res, next) {
