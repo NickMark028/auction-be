@@ -10,7 +10,36 @@ import auctionRouter from './routes/auction.router';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-const httpServer = createServer();
+
+
+//httpServer.listen(40567);
+
+// ---------------------------------------------------------------------- //
+// Express
+import express, { ErrorRequestHandler } from 'express';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import cors from 'cors';
+import {
+  authRouter,
+  bidderRouter,
+  blockedBidderRouter,
+  categoryRouter,
+  productRouter,
+  rootRouter,
+  searchRouter,
+  sellerRouter,
+  userRouter,
+  watchListRouter,
+} from './routes';
+import adminRouter from './routes/admin.router';
+import winnerRouter from './routes/winner.router';
+import { auth } from './middleware';
+import currentBidderRouter from './routes/currentBidder.route';
+const app = express();
+
+
+const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: '*',
@@ -44,31 +73,8 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(40567);
 
-// ---------------------------------------------------------------------- //
-// Express
-import express, { ErrorRequestHandler } from 'express';
-import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
-import cors from 'cors';
-import {
-  authRouter,
-  bidderRouter,
-  blockedBidderRouter,
-  categoryRouter,
-  productRouter,
-  rootRouter,
-  searchRouter,
-  sellerRouter,
-  userRouter,
-  watchListRouter,
-} from './routes';
-import adminRouter from './routes/admin.router';
-import winnerRouter from './routes/winner.router';
-import { auth } from './middleware';
-import currentBidderRouter from './routes/currentBidder.route';
-const app = express();
+
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
@@ -133,7 +139,7 @@ app.use(function (err, req, res, next) {
 const PORT = process.env.PORT || '4000';
 const NODE_ENV = process.env.NODE_ENV;
 
-app.listen(PORT, function () {
+httpServer.listen(PORT, function () {
   if (NODE_ENV === 'develop')
     console.log(`Server is listening at http://localhost:${PORT}`);
 });
