@@ -10,8 +10,6 @@ import auctionRouter from './routes/auction.router';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-
-
 //httpServer.listen(40567);
 
 // ---------------------------------------------------------------------- //
@@ -36,8 +34,12 @@ import adminRouter from './routes/admin.router';
 import winnerRouter from './routes/winner.router';
 import { auth } from './middleware';
 import currentBidderRouter from './routes/currentBidder.route';
+import {
+  auto_mail_bidder,
+  auto_mail_seller_nothing,
+  auto_mail_seller_sold,
+} from './auto';
 const app = express();
-
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -72,9 +74,6 @@ io.on('connection', (socket) => {
     io.sockets.emit(`updatebtn_${data.Id}`, data);
   });
 });
-
-
-
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
@@ -116,11 +115,10 @@ app.use('/api/current-bidder', currentBidderRouter);
 
 // app.get('/mail', auto_mail);
 //auto gửi mail sau mỗi giấy
-// setInterval(function () {
-//   auto_mail_bidder();
-//   auto_mail_seller_nothing(),
-//   auto_mail_seller_sold()
-// }, 5000);
+setInterval(function () {
+  auto_mail_bidder();
+  auto_mail_seller_nothing(), auto_mail_seller_sold();
+}, 10000);
 
 app.use(function (req, res, next) {
   res.status(404).json({
