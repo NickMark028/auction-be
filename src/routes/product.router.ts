@@ -72,9 +72,6 @@ productRouter.post('/', async function (req: Request, res: Response) {
       id: ret[0],
       ...product,
     };
-
-    await productModel.addBidded(product.id, product.reservedPrice);
-
     const rawquery = ` CREATE EVENT ScheduleTimeOutForProduct${product.id}
     ON SCHEDULE AT '${product.timeExpired}'
     DO
