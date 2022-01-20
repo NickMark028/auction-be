@@ -2,8 +2,7 @@
   "type": "object",
   "properties": {
     "keyword": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "page": {
       "type": "string"
@@ -11,7 +10,7 @@
     "category": {
       "type": "string"
     },
-    "time": {
+    "timeExpired": {
       "type": "string",
       "pattern": "(asc)|(desc)"
     },
@@ -20,6 +19,5 @@
       "pattern": "(asc)|(desc)"
     }
   },
-  "required": ["keyword"],
   "additionalProperties": false
 }

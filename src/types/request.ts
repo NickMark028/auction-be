@@ -1,9 +1,16 @@
 
-export type TReq = {
+export type TProductQuery = {
+    // Filter
+    keyword?: string;
+    page?: string;
+    category?: string;
 
-}
+    // Sorting
+    timeExpired?: 'asc' | 'desc';
+    pricing?: 'asc' | 'desc';
+};
 
-export type TReqBlockedBidder = {
+export type TCurrentBidder = {
     productId: number;
     bidderId: number
 }

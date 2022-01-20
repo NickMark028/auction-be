@@ -4,45 +4,23 @@ import searchSchema from '../schema/search.json';
 import db from '../utils/db';
 import { convertProcedureRowSetToList } from '../utils/convert';
 import { PageSize } from '../enum';
+import { TProductQuery } from '../types/request';
+import productModel from '../models/product.model';
 
 const searchRouter = Router();
-
-type ProductQuery = {
-  // Filter
-  keyword: string;
-  page?: string;
-  category?: string;
-
-  // Sorting
-  time?: 'asc' | 'desc';
-  pricing?: 'asc' | 'desc';
-};
 
 searchRouter.get(
   '/',
   validateQuery(searchSchema),
   async (req: Request, res: Response) => {
     try {
-      const {
-        keyword,
-        category,
-        page = '1',
-        pricing,
-        time,
-      } = req.query as ProductQuery;
-      const pageNumber = parseInt(page);
-
-      const [rows, fields] = await db.raw('CALL SearchProduct(?, ?, ?)', [
-        keyword,
-        pageNumber,
-        PageSize.SEARCH_PRODUCT,
-      ]);
-
-      res.status(200).json(convertProcedureRowSetToList(rows));
-    } catch (error) {
-   
+      const data = await productModel.searchProduct(req.query as TProductQuery);
+      res.status(200).json(data);
+    } 
+    catch (error) {
+      console.error(error);
       res.status(500).json({
-        message: 'Server error',
+        errorMsg: 'Server internal error',
       });
     }
   }

@@ -105,11 +105,11 @@ export async function auto_mail_seller_sold() {
 }
 
 export async function auto_mail_seller_nothing() {
-
-  const rawquery = `SELECT U.email,P.name FROM biddedproduct B, user U, product P 
+  console.log('auto mail');
+  const rawquery = `SELECT U.email,P.name,P.id FROM biddedproduct B, user U, product P 
   where  B.statusCode = 200 and P.id=B.id and P.sellerId = U.id;`;
   const [rows, fields] = await db.raw(rawquery);
-
+  //console.log(rows);
   // res.send(rows);
   let temp: any[] = [];
   let product: any[] = [];
@@ -117,6 +117,8 @@ export async function auto_mail_seller_nothing() {
     temp = [...temp, rows[i].email];
     product = [...product, { id: rows[i].id, name: rows[i].name }];
   }
+  console.log(temp);
+  console.log(product);
 
   // check mail gửi >>>>> đánh dấu đã gửi >> guiwr vào db để lần sau query
   if (rows.length === 0) {

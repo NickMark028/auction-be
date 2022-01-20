@@ -7,11 +7,13 @@ import productModel from '../models/product.model';
 import sellerModel from '../models/seller.model';
 
 const productRouter = express.Router();
+
 cloudinary.config({
   cloud_name: process.env.IC_NAME,
   api_key: process.env.IC_API_KEY,
   api_secret: process.env.IC_SECRET,
 });
+
 productRouter.post('/', async function (req: Request, res: Response) {
   let product = req.body;
 
@@ -42,8 +44,8 @@ productRouter.post('/', async function (req: Request, res: Response) {
       }
     );
     const temp: any = [];
-    var i = 0;
- for (const element of product.productImage) {
+    let i = 0;
+    for (const element of product.productImage) {
       await cloudinary.v2.uploader.upload(
         element,
         {
@@ -69,17 +71,14 @@ productRouter.post('/', async function (req: Request, res: Response) {
       id: ret[0],
       ...product,
     };
-
-    await productModel.addBidded(product.id,product.reservedPrice);
-
-    const rawquery= ` CREATE EVENT ScheduleTimeOutForProduct${product.id}
+    const rawquery = ` CREATE EVENT ScheduleTimeOutForProduct${product.id}
     ON SCHEDULE AT '${product.timeExpired}'
     DO
       UPDATE  BiddedProduct
       SET     statusCode = 200
       WHERE   id = ${product.id};
-      `
-    await db.raw(rawquery) 
+    `;
+    await db.raw(rawquery);
 
     category.forEach(async (element: any) => {
       await productModel.addCategory(product.id, element.id);
@@ -89,20 +88,15 @@ productRouter.post('/', async function (req: Request, res: Response) {
     });
     return res.status(200).json({ status: 'add success' });
   } catch (err) {
-    return res.status(400).json({status:"server error", error: err });
+    console.log(err);
+    return res.status(400).json({ status: 'server error', error: err });
   }
 });
 
 productRouter.get('/top-near-end', async (req: Request, res: Response) => {
   try {
-    const rawQuery = `
-      SELECT		*
-      FROM		  QueryProductView PV
-      ORDER BY	TIME_TO_SEC(TIMEDIFF(NOW(), NOW() - INTERVAL 1 MONTH)) ASC
-      LIMIT 		8;
-    `;
-    const [rows, fields] = await db.raw(rawQuery);
-    res.status(200).json(rows);
+    const data = await productModel.getNearlyEndProducts(8);
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
       error: 'Server internal error',
@@ -112,14 +106,8 @@ productRouter.get('/top-near-end', async (req: Request, res: Response) => {
 
 productRouter.get('/top-priciest', async (req: Request, res: Response) => {
   try {
-    const rawQuery = `
-      SELECT		*
-      FROM	  	QueryProductView PV
-      ORDER BY	IF(PV.currentPrice IS NULL, PV.reservedPrice, PV.currentPrice) DESC
-      LIMIT 		8;
-    `;
-    const [rows, fields] = await db.raw(rawQuery);
-    res.status(200).json(rows);
+    const data = await productModel.getTopPriciestProducts(8);
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
       error: 'Server internal error',
@@ -129,14 +117,8 @@ productRouter.get('/top-priciest', async (req: Request, res: Response) => {
 
 productRouter.get('/top-auction-log', async (req: Request, res: Response) => {
   try {
-    const rawQuery = `
-      SELECT		*
-      FROM	  	QueryProductView PV
-      ORDER BY	PV.auctionLogCount DESC
-      LIMIT 		8;
-    `;
-    const [rows, fields] = await db.raw(rawQuery);
-    res.status(200).json(rows);
+    const data = await productModel.getProductWithMostAutionLog(8);
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
       error: 'Server internal error',
@@ -171,6 +153,7 @@ productRouter.get('/related/:section', async (req, res) => {
     res.send(error).status(400);
   }
 });
+
 productRouter.get('/topbidder/:id', async (req, res) => {
   try {
     const rawQuery = `
@@ -204,7 +187,7 @@ productRouter.delete('/', async (req, res) => {
     });
   } catch (error) {
     return res.status(400).json({
-      status: 'server error'
+      status: 'server error',
     });
   }
 });
