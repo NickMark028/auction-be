@@ -1,5 +1,4 @@
-import { log } from 'console';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import auctionModel from '../models/auction.model';
 
 const auctionRouter = express.Router();
@@ -11,7 +10,7 @@ auctionRouter.post('/', async (req, res) => {
     auction = {
       id: ret[0],
       ...auction,
-    };
+      };
 
     res.status(201).json(auction);
   } catch (error) {
